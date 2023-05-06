@@ -1,0 +1,66 @@
+<div style="display: table; min-height: 100%; margin: auto">
+  <div class="centring-card">
+    <nz-card nzBorderless>
+      <form
+        nz-form
+        [formGroup]="registerForm"
+        class="login-form"
+        (ngSubmit)="onSubmit()"
+      >
+        <h1 nz-typography class="centered">Регистрация</h1>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Введите свой Логин">
+            <nz-input-group nzPrefixIcon="user">
+              <input
+                type="text"
+                nz-input
+                formControlName="userName"
+                placeholder="Логин"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control
+            nzErrorTip="Минимум 8 символов, как минимум одна цифра и буква"
+          >
+            <nz-input-group nzPrefixIcon="unlock">
+              <input
+                type="password"
+                nz-input
+                formControlName="password"
+                placeholder="Пароль"
+                (ngModelChange)="updateConfirmValidator()"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Пароли не совпадают">
+            <nz-input-group nzPrefixIcon="lock">
+              <input
+                type="password"
+                nz-input
+                formControlName="confirmPassword"
+                placeholder="Подтвердите пароль"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <a class="login-form-register" routerLink="/login"
+          >Есть аккаунт? Войдите</a
+        >
+        <button
+          [disabled]="registerForm.invalid"
+          nz-button
+          class="login-form-button login-form-margin"
+          [nzType]="'primary'"
+        >
+          Войти
+        </button>
+        <!--Or
+    <a>register now!</a>-->
+      </form>
+    </nz-card>
+  </div>
+</div>

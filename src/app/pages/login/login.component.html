@@ -1,0 +1,53 @@
+<div style="display: table; min-height: 100%; margin: auto">
+  <div class="centring-card">
+    <nz-card nzBorderless>
+      <form
+        nz-form
+        [formGroup]="loginForm"
+        class="login-form"
+        (ngSubmit)="onSubmit()"
+      >
+        <h1 nz-typography class="centered">Вход</h1>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Введите свой Логин">
+            <nz-input-group nzPrefixIcon="user">
+              <input
+                type="text"
+                nz-input
+                formControlName="userName"
+                placeholder="Логин"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control
+            nzErrorTip="Минимум 8 символов, как минимум одна цифра и буква"
+          >
+            <nz-input-group nzPrefixIcon="lock">
+              <input
+                type="password"
+                nz-input
+                formControlName="password"
+                placeholder="Пароль"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <a class="login-form-register" routerLink="/register"
+          >Нет аккаунта? Создайте</a
+        >
+        <button
+          [disabled]="loginForm.invalid"
+          nz-button
+          class="login-form-button login-form-margin"
+          [nzType]="'primary'"
+        >
+          Войти
+        </button>
+        <!--Or
+  <a>register now!</a>-->
+      </form>
+    </nz-card>
+  </div>
+</div>

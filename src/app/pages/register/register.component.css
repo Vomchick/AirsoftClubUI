@@ -1,0 +1,18 @@
+.centring-card {
+  display: table-cell;
+  vertical-align: middle;
+  width: 30em;
+}
+
+.login-form-register {
+  float: right;
+  margin-bottom: 16px;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.centered {
+  text-align: center;
+}
