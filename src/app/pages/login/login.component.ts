@@ -37,14 +37,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    /*if (this.loginForm.valid) {
+    if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['admin']);
+          this.router.navigate(['account']);
         },
         error: (err) => {
           alert(
-            'Something went wrong. Check your password and username or try later'
+            'Что-то пошло не так. Проверьте свой пароль и логин или попробуйте позже'
           );
           console.log(err);
         },
@@ -56,9 +56,6 @@ export class LoginComponent implements OnInit {
           control.updateValueAndValidity({ onlySelf: true });
         }
       });
-    }*/
-    //тут должен быть subscribe
-    //this.authService.login(this.user);
-    //this.clearUser();
+    }
   }
 }

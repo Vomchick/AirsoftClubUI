@@ -60,28 +60,25 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    /*if (this.loginForm.valid) {
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        this.router.navigate(['admin']);
-      },
-      error: (err) => {
-        alert(
-          'Something went wrong. Check your password and username or try later'
-        );
-        console.log(err);
-      },
-    });
-  } else {
-    Object.values(this.loginForm.controls).forEach((control) => {
-      if (control.invalid) {
-        control.markAsDirty();
-        control.updateValueAndValidity({ onlySelf: true });
-      }
-    });
-  }*/
-    //тут должен быть subscribe
-    //this.authService.login(this.user);
-    //this.clearUser();
+    if (this.registerForm.valid) {
+      this.authService.register(this.registerForm.value).subscribe({
+        next: (res) => {
+          this.router.navigate(['account']);
+        },
+        error: (err) => {
+          alert(
+            'Что-то пошло не так. Воспользуйтесь другим логином, этот уже занят'
+          );
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.registerForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 }

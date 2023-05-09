@@ -6,13 +6,13 @@
     </a>
   </nz-header>
   <nz-layout>
-    <nz-sider nzCollapsible nzTheme="dark" nzWidth="200px">
+    <nz-sider *ngIf="isLoggedIn()" nzCollapsible nzTheme="dark" nzWidth="200px">
       <ul nz-menu nzTheme="dark" nzMode="inline">
-        <li nz-menu-item>
+        <li nz-menu-item [nzSelected]="isAccountPage()">
           <span nz-icon nzType="user"></span>
           <span>Аккаунт</span>
         </li>
-        <li nz-menu-item style="font-size: 14">
+        <li nz-menu-item style="font-size: 14" [nzSelected]="isNewsPage()">
           <span nz-icon>
             <svg xml:space="preserve" viewBox="0 0 442 442">
               <path
@@ -52,15 +52,15 @@
           </span>
           <span>Новости</span>
         </li>
-        <li nz-menu-item>
+        <li nz-menu-item [nzSelected]="isTeamPage()">
           <span nz-icon nzType="team" nzTheme="outline"></span>
           <span>Моя команда</span>
         </li>
-        <li nz-menu-item>
+        <li nz-menu-item [nzSelected]="isClubPage()">
           <span nz-icon nzType="team"></span>
           <span>Клубы</span>
         </li>
-        <li nz-menu-item>
+        <li nz-menu-item (click)="logOut()">
           <span nz-icon nzType="poweroff"></span>
           <span>Выход</span>
         </li>
