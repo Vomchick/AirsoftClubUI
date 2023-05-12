@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,13 @@ import { AuthService } from 'src/app/service/auth.service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
+  constructor(
+    private authService: AuthService,
+    private ufb: UntypedFormBuilder,
+    private router: Router,
+    private message: NzMessageService
+  ) {}
+
   registerForm!: UntypedFormGroup;
 
   confirmationValidator = (
@@ -26,12 +34,6 @@ export class RegisterComponent {
     }
     return {};
   };
-
-  constructor(
-    private authService: AuthService,
-    private ufb: UntypedFormBuilder,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.registerForm = this.ufb.group({
@@ -58,6 +60,11 @@ export class RegisterComponent {
       this.registerForm.controls['confirmPassword'].updateValueAndValidity()
     );
   }
+  createMessage(): void {
+    this.message.error(
+      'Что-то пошло не так. Воспользуйтесь другим логином, возможно этот занят, или попробуйте позже'
+    );
+  }
 
   onSubmit() {
     if (this.registerForm.valid) {
@@ -66,9 +73,7 @@ export class RegisterComponent {
           this.router.navigate(['account']);
         },
         error: (err) => {
-          alert(
-            'Что-то пошло не так. Воспользуйтесь другим логином, этот уже занят'
-          );
+          this.createMessage();
           console.log(err);
         },
       });

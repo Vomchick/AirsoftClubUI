@@ -9,6 +9,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { RouterModule } from '@angular/router';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -23,6 +24,7 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     NzCardModule,
     RouterModule,
+    NzMessageModule,
   ],
 })
 export class LoginModule {}

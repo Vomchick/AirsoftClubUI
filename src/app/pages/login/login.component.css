@@ -1,11 +1,15 @@
 nz-card {
-  max-width: 30em;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  width: 30em;
+  transform: translate(-50%, -50%);
 }
 
 .centring-card {
-  display: table-cell;
-  vertical-align: middle;
-  width: 30em;
+  margin: auto;
+  top: 40%;
 }
 
 .login-form-register {

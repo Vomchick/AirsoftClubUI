@@ -8,7 +8,7 @@
   <nz-layout>
     <nz-sider *ngIf="isLoggedIn()" nzCollapsible nzTheme="dark" nzWidth="200px">
       <ul nz-menu nzTheme="dark" nzMode="inline">
-        <li nz-menu-item [nzSelected]="isAccountPage()">
+        <li nz-menu-item [nzSelected]="isAccountPage()" routerLink="account">
           <span nz-icon nzType="user"></span>
           <span>Аккаунт</span>
         </li>

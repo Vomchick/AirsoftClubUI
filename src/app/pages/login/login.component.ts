@@ -6,6 +6,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private ufb: UntypedFormBuilder,
-    private router: Router
+    private router: Router,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  createMessage(): void {
+    this.message.error(
+      'Что-то пошло не так. Проверьте свой пароль и логин или попробуйте позже'
+    );
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
@@ -43,9 +51,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['account']);
         },
         error: (err) => {
-          alert(
-            'Что-то пошло не так. Проверьте свой пароль и логин или попробуйте позже'
-          );
+          this.createMessage();
           console.log(err);
         },
       });

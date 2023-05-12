@@ -1,0 +1,10 @@
+<nz-card [nzBordered]="false">
+  <nz-card-meta
+    [nzAvatar]="avatarTemplate"
+    nzTitle="Имя пользователя"
+    nzDescription="Очень крутое описание"
+  ></nz-card-meta>
+</nz-card>
+<ng-template #avatarTemplate>
+  <nz-avatar [nzSize]="128" nzIcon="user"></nz-avatar>
+</ng-template>

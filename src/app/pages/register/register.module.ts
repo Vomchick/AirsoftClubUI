@@ -9,6 +9,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { RouterModule } from '@angular/router';
 import { RegisterComponent } from './register.component';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 @NgModule({
   declarations: [RegisterComponent],
@@ -23,6 +24,7 @@ import { RegisterComponent } from './register.component';
     ReactiveFormsModule,
     NzCardModule,
     RouterModule,
+    NzMessageModule,
   ],
 })
 export class RegisterModule {}
