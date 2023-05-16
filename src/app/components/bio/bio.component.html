@@ -1,10 +1,18 @@
 <nz-card [nzBordered]="false">
   <nz-card-meta
+    nzTitle="{{ account.callSign }}"
+    [nzDescription]="description"
     [nzAvatar]="avatarTemplate"
-    nzTitle="Имя пользователя"
-    nzDescription="Очень крутое описание"
   ></nz-card-meta>
 </nz-card>
+
 <ng-template #avatarTemplate>
   <nz-avatar [nzSize]="128" nzIcon="user"></nz-avatar>
+</ng-template>
+
+<ng-template #description>
+  <p>Девиз: {{ account.desc }}</p>
+  <p>Я в игре: {{ account.gameRole }}</p>
+  <p *ngIf="haveTeam()">Команда: {{ account.teamName }}</p>
+  <p *ngIf="haveTeam()">Роль команде: {{ account.teamRole }}</p>
 </ng-template>

@@ -21,7 +21,7 @@ export class AuthService {
   ) {}
 
   login(userInfo: { userName: string; password: string }): Observable<Token> {
-    return this.http.post<Token>(this.apiUrl + 'api/Auth/login', userInfo).pipe(
+    return this.http.post<Token>(this.apiUrl + 'Auth/login', userInfo).pipe(
       tap((token) => {
         localStorage.setItem(access_token_key, token.access_token);
       })
@@ -30,13 +30,11 @@ export class AuthService {
 
   register(userInfo: User): Observable<Token> {
     userInfo.id = '00000000-0000-0000-0000-000000000000';
-    return this.http
-      .post<Token>(this.apiUrl + 'api/Auth/register', userInfo)
-      .pipe(
-        tap((token) => {
-          localStorage.setItem(access_token_key, token.access_token);
-        })
-      );
+    return this.http.post<Token>(this.apiUrl + 'Auth/register', userInfo).pipe(
+      tap((token) => {
+        localStorage.setItem(access_token_key, token.access_token);
+      })
+    );
   }
 
   isAuthenticated(): boolean {
