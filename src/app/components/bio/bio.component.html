@@ -4,6 +4,7 @@
     [nzDescription]="description"
     [nzAvatar]="avatarTemplate"
   ></nz-card-meta>
+  <a (click)="showModal()">Изменить данные об аккаунте</a>
 </nz-card>
 
 <ng-template #avatarTemplate>
@@ -12,7 +13,81 @@
 
 <ng-template #description>
   <p>Девиз: {{ account.desc }}</p>
-  <p>Я в игре: {{ account.gameRole }}</p>
+  <p>Я в игре: {{ translatedGameRole }}</p>
   <p *ngIf="haveTeam()">Команда: {{ account.teamName }}</p>
-  <p *ngIf="haveTeam()">Роль команде: {{ account.teamRole }}</p>
+  <p *ngIf="haveTeam()">Роль команде: {{ translatedTeamRole }}</p>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Изменение данных"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="accountForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="callsign"
+          >Позывной</nz-form-label
+        >
+        <nz-form-control
+          [nzSm]="16"
+          [nzXs]="24"
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
+        >
+          <input nz-input formControlName="callsign" id="callsign" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="gameRole"
+          >Роль в игре</nz-form-label
+        >
+        <nz-form-control
+          [nzSm]="16"
+          [nzXs]="24"
+          nzErrorTip="Выберите свою роль"
+        >
+          <nz-select
+            formControlName="gameRole"
+            id="gameRole"
+            nzPlaceHolder="Выберите роль"
+          >
+            <nz-option nzLabel="Штурмовик" nzValue="Stormtrooper"></nz-option>
+            <nz-option nzLabel="Снайпер" nzValue="Sniper"></nz-option>
+            <nz-option nzLabel="Марксман" nzValue="Marksman"></nz-option>
+            <nz-option nzLabel="Пулеметчик" nzValue="MachineGunner"></nz-option>
+            <nz-option nzLabel="Другое" nzValue="Other"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="desc"
+          >Описание/Дивиз</nz-form-label
+        >
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-textarea-count [nzMaxCharacterCount]="2000">
+            <textarea
+              formControlName="desc"
+              id="desc"
+              nz-input
+              rows="2"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+  <button
+    nz-button
+    [disabled]="accountForm.invalid"
+    nzType="primary"
+    (click)="CreateAccount()"
+  >
+    Обновить
+  </button>
 </ng-template>

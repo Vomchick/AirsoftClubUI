@@ -20,10 +20,10 @@ export class AccountService {
   }
 
   updateAccount(acc: AccountModel): Observable<AccountModel> {
-    return this.http.put<AccountModel>(this.apiUrl, acc);
+    return this.http.put<AccountModel>(this.apiUrl + 'account', acc);
   }
 
   addAccount(acc: AccountModel): Observable<AccountModel> {
-    return this.http.post<AccountModel>(this.apiUrl, acc);
+    return this.http.post<AccountModel>(this.apiUrl + 'account', acc);
   }
 }

@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { AccountModel } from 'src/app/models/account.model';
 import { InfoModel } from 'src/app/models/info.model';
 import { AccountService } from 'src/app/service/account.service';
@@ -11,51 +17,56 @@ import { AccountService } from 'src/app/service/account.service';
 export class AccountComponent implements OnInit {
   infos: InfoModel[] = [];
   account!: AccountModel;
+  accountForm!: UntypedFormGroup;
 
-  constructor(private accService: AccountService) {}
+  constructor(
+    private accService: AccountService,
+    private ufb: UntypedFormBuilder,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.accService.getAccount().subscribe((response) => {
-      this.account = response;
-      this.translateRoles();
+      if (response != null) {
+        this.account = response;
+      }
+    });
+
+    this.accountForm = this.ufb.group({
+      callsign: [null, [Validators.required, Validators.maxLength(128)]],
+      gameRole: [null, [Validators.required]],
+      desc: [null, [Validators.maxLength(2000)]],
     });
   }
 
-  translateRoles(): void {
-    switch (this.account.gameRole) {
-      case 'Stormtrooper': {
-        this.account.gameRole = 'Штурмовик';
-        break;
-      }
-      case 'Sniper': {
-        this.account.gameRole = 'Снайпер';
-        break;
-      }
-      case 'Marksman': {
-        this.account.gameRole = 'Марксман';
-        break;
-      }
-      case 'MachineGunner': {
-        this.account.gameRole = 'Пулеметчик';
-        break;
-      }
-    }
+  haveAccount(): boolean {
+    return !!this.account;
+  }
 
-    switch (this.account.teamRole) {
-      case 'Commander': {
-        this.account.teamRole = 'Командир';
-        break;
-      }
-      case 'DeputyCommander': {
-        this.account.teamRole = 'Зам Командира';
-        break;
-      }
-      case 'Member': {
-        this.account.teamRole = 'Участник';
-        break;
-      }
-      default:
-        break;
+  CreateAccount() {
+    if (this.accountForm.valid) {
+      this.accService.addAccount(this.accountForm.value).subscribe({
+        next: (res) => {
+          window.location.reload();
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.accountForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
     }
+  }
+
+  createMessage(): void {
+    this.message.error(
+      'Что-то пошло не так. Проверьте введенные данные или попробуйте позже'
+    );
   }
 }
