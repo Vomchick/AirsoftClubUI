@@ -1,11 +1,18 @@
-<nz-card [nzBordered]="false">
+<nz-card
+  *ngIf="isItAccount()"
+  [nzBordered]="false"
+  [nzActions]="[actionAccountEdit]"
+>
   <nz-card-meta
     nzTitle="{{ account.callSign }}"
     [nzDescription]="description"
     [nzAvatar]="avatarTemplate"
   ></nz-card-meta>
-  <a (click)="showModal()">Изменить данные об аккаунте</a>
 </nz-card>
+
+<ng-template #actionAccountEdit>
+  <span nz-icon nzType="edit" (click)="showModalAccount()"></span>
+</ng-template>
 
 <ng-template #avatarTemplate>
   <nz-avatar [nzSize]="128" nzIcon="user"></nz-avatar>
@@ -15,14 +22,15 @@
   <p>Девиз: {{ account.desc }}</p>
   <p>Я в игре: {{ translatedGameRole }}</p>
   <p *ngIf="haveTeam()">Команда: {{ account.teamName }}</p>
-  <p *ngIf="haveTeam()">Роль команде: {{ translatedTeamRole }}</p>
+  <p *ngIf="haveTeam()">Роль в команде: {{ translatedTeamRole }}</p>
 </ng-template>
 
 <nz-modal
-  [(nzVisible)]="isVisible"
+  [(nzVisible)]="isVisibleAccount"
   nzTitle="Изменение данных"
-  (nzOnCancel)="handleCancel()"
-  [nzFooter]="modalFooter"
+  nzCentered
+  (nzOnCancel)="handleCancelAccount()"
+  [nzFooter]="modalAccountFooter"
 >
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="accountForm">
@@ -31,7 +39,7 @@
           >Позывной</nz-form-label
         >
         <nz-form-control
-          [nzSm]="16"
+          [nzSm]="18"
           [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
         >
@@ -44,7 +52,7 @@
           >Роль в игре</nz-form-label
         >
         <nz-form-control
-          [nzSm]="16"
+          [nzSm]="18"
           [nzXs]="24"
           nzErrorTip="Выберите свою роль"
         >
@@ -52,6 +60,7 @@
             formControlName="gameRole"
             id="gameRole"
             nzPlaceHolder="Выберите роль"
+            [nzShowArrow]="false"
           >
             <nz-option nzLabel="Штурмовик" nzValue="Stormtrooper"></nz-option>
             <nz-option nzLabel="Снайпер" nzValue="Sniper"></nz-option>
@@ -66,13 +75,122 @@
         <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="desc"
           >Описание/Дивиз</nz-form-label
         >
-        <nz-form-control [nzSm]="16" [nzXs]="24">
+        <nz-form-control [nzSm]="18" [nzXs]="24">
           <nz-textarea-count [nzMaxCharacterCount]="2000">
             <textarea
               formControlName="desc"
               id="desc"
               nz-input
-              rows="2"
+              rows="3"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!--<nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="image"
+          >Фото профиля</nz-form-label
+        >
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <input type="file" formControlName="image" id="image" />
+        </nz-form-control>
+      </nz-form-item>-->
+
+      <!--<nz-form-item>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-upload
+            nzListType="picture"
+            nzAccept=".png,.jpg,.jpeg"
+            nzAction="https://localhost:7245/account/image"
+          >
+            <button nz-button>
+              <span nz-icon nzType="upload"></span>
+              Фото профиля
+            </button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>-->
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalAccountFooter>
+  <button
+    nz-button
+    [disabled]="accountForm.invalid"
+    nzType="primary"
+    (click)="UpdateAccount()"
+  >
+    Обновить
+  </button>
+</ng-template>
+
+<nz-card
+  *ngIf="!isItAccount()"
+  [nzBordered]="false"
+  [nzActions]="[actionTeamClubEdit, actionTeamClubDelete]"
+>
+  <nz-card-meta
+    nzTitle="{{ teamClub.name }}"
+    nzDescription="{{ teamClub.description }}"
+    [nzAvatar]="avatarTemplate"
+  ></nz-card-meta>
+</nz-card>
+
+<ng-template #actionTeamClubEdit>
+  <span nz-icon nzType="edit" (click)="showModalTeamClub()"></span>
+</ng-template>
+<ng-template #actionTeamClubDelete>
+  <span
+    nz-icon
+    nzType="delete"
+    nz-popconfirm
+    nzPopconfirmTitle="Вы точно хотите удалить свою команду?"
+    nzPopconfirmPlacement="bottom"
+    (nzOnConfirm)="deleteTeamClub()"
+    [nzIcon]="customIcon"
+    nzCancelText="Нет, не удалять"
+    nzOkText="Да, удалить"
+  ></span>
+</ng-template>
+
+<ng-template #customIcon>
+  <span nz-icon nzType="warning" style="color: #b4251b"></span>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisibleTeamClub"
+  nzTitle="Изменение данных"
+  nzCentered
+  (nzOnCancel)="handleCancelTeamClub()"
+  [nzFooter]="modalTeamClubFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="teamClubForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
+          >Название</nz-form-label
+        >
+        <nz-form-control
+          [nzSm]="18"
+          [nzXs]="24"
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
+        >
+          <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
+          >Описание/Дивиз</nz-form-label
+        >
+        <nz-form-control [nzSm]="18" [nzXs]="24">
+          <nz-textarea-count [nzMaxCharacterCount]="2000">
+            <textarea
+              formControlName="description"
+              id="description"
+              nz-input
+              rows="3"
             ></textarea>
           </nz-textarea-count>
         </nz-form-control>
@@ -81,12 +199,12 @@
   </ng-container>
 </nz-modal>
 
-<ng-template #modalFooter>
+<ng-template #modalTeamClubFooter>
   <button
     nz-button
-    [disabled]="accountForm.invalid"
+    [disabled]="teamClubForm.invalid"
     nzType="primary"
-    (click)="CreateAccount()"
+    (click)="UpdateTeamClub()"
   >
     Обновить
   </button>

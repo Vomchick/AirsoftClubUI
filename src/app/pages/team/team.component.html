@@ -1,0 +1,99 @@
+<div *ngIf="show">
+  <button
+    *ngIf="!gotPersonalTeam()"
+    nz-button
+    nzType="dashed"
+    (click)="showModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Создать свою команду
+  </button>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Создание команды"
+    nzCentered
+    (nzOnCancel)="handleCancel()"
+    [nzFooter]="modalFooter"
+  >
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="teamForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
+            >Название</nz-form-label
+          >
+          <nz-form-control
+            [nzSm]="18"
+            [nzXs]="24"
+            nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
+          >
+            <input nz-input formControlName="name" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
+            >Описание/Дивиз</nz-form-label
+          >
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-textarea-count [nzMaxCharacterCount]="2000">
+              <textarea
+                formControlName="description"
+                id="description"
+                nz-input
+                rows="3"
+              ></textarea>
+            </nz-textarea-count>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      [disabled]="teamForm.invalid"
+      nzType="primary"
+      (click)="CreateTeam()"
+    >
+      Создать
+    </button>
+  </ng-template>
+
+  <div *ngIf="gotPersonalTeam()">
+    <div nz-row nzJustify="center">
+      <div nz-col nzSpan="20">
+        <nz-card
+          [nzBordered]="false"
+          (click)="openPersonalTeam()"
+          nzHoverable
+          style="min-height: 12em"
+        >
+          <nz-card-meta
+            nzTitle="{{ personalTeam.name }}"
+            nzDescription="{{ personalTeam.description }}"
+            [nzAvatar]="avatarTemplate"
+          ></nz-card-meta>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+  <div nz-row [nzGutter]="[24, 24]" nzJustify="center">
+    <div *ngFor="let team of teams" nz-col nzMd="10" nzSm="16" nzXs="24">
+      <nz-card [nzBordered]="false" nzHoverable style="min-height: 12em">
+        <nz-card-meta
+          nzTitle="{{ team.name }}"
+          nzDescription="{{ team.description }}"
+          [nzAvatar]="avatarTemplate"
+        ></nz-card-meta>
+      </nz-card>
+    </div>
+  </div>
+
+  <ng-template #avatarTemplate>
+    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+  </ng-template>
+</div>

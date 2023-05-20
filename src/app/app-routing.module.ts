@@ -5,6 +5,10 @@ import { AccountComponent } from './pages/account/account.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthGuard } from './guards/unauth.guard';
+import { TeamComponent } from './pages/team/team.component';
+import { BioComponent } from './components/bio/bio.component';
+import { InfoComponent } from './components/info/info.component';
+import { PersonalTeamComponent } from './pages/personal-team/personal-team.component';
 
 const routes: Routes = [
   {
@@ -31,6 +35,18 @@ const routes: Routes = [
     component: AccountComponent,
     loadChildren: () =>
       import('./pages/account/account.module').then((x) => x.AccountModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'team',
+    component: TeamComponent,
+    loadChildren: () =>
+      import('./pages/team/team.module').then((x) => x.TeamModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'teamInfo/:team',
+    component: PersonalTeamComponent,
     canActivate: [AuthGuard],
   },
 ];

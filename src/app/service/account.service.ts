@@ -20,6 +20,7 @@ export class AccountService {
   }
 
   updateAccount(acc: AccountModel): Observable<AccountModel> {
+    debugger;
     return this.http.put<AccountModel>(this.apiUrl + 'account', acc);
   }
 

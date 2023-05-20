@@ -4,4 +4,5 @@ export interface AccountModel {
   desc: string;
   teamName: string;
   teamRole: string;
+  //imageFile: File;
 }

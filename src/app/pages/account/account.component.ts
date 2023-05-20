@@ -18,6 +18,7 @@ export class AccountComponent implements OnInit {
   infos: InfoModel[] = [];
   account!: AccountModel;
   accountForm!: UntypedFormGroup;
+  show: boolean = false;
 
   constructor(
     private accService: AccountService,
@@ -26,10 +27,17 @@ export class AccountComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.accService.getAccount().subscribe((response) => {
-      if (response != null) {
-        this.account = response;
-      }
+    this.accService.getAccount().subscribe({
+      next: (response) => {
+        if (response != null) {
+          this.account = response;
+          this.show = true;
+        }
+      },
+      error: (err) => {
+        this.message.error('Сервер недоступен');
+        console.log(err);
+      },
     });
 
     this.accountForm = this.ufb.group({

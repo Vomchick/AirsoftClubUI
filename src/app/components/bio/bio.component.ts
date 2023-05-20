@@ -4,9 +4,13 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { AccountModel } from 'src/app/models/account.model';
+import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { AccountService } from 'src/app/service/account.service';
+import { TeamService } from 'src/app/service/team.service';
 
 @Component({
   selector: 'bio',
@@ -15,35 +19,69 @@ import { AccountService } from 'src/app/service/account.service';
 })
 export class BioComponent implements OnInit {
   @Input() account!: AccountModel;
-  isVisible = false;
+  @Input() teamClub!: TeamClubModel;
+  @Input() isTeam!: boolean;
+
+  isVisibleTeamClub = false;
+  isVisibleAccount = false;
+
   accountForm!: UntypedFormGroup;
+  teamClubForm!: UntypedFormGroup;
+
   translatedGameRole!: string;
   translatedTeamRole!: string;
 
   constructor(
     private accService: AccountService,
+    private teamService: TeamService,
     private ufb: UntypedFormBuilder,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.accountForm = this.ufb.group({
-      callsign: [
-        this.account.callSign,
-        [Validators.required, Validators.maxLength(128)],
-      ],
-      gameRole: [this.account.gameRole, [Validators.required]],
-      desc: [this.account.desc, [Validators.maxLength(2000)]],
-    });
+    //debugger;
+    if (!!this.account) {
+      this.accountForm = this.ufb.group({
+        callsign: [
+          this.account.callSign,
+          [Validators.required, Validators.maxLength(128)],
+        ],
+        gameRole: [this.account.gameRole, [Validators.required]],
+        desc: [this.account.desc, [Validators.maxLength(2000)]],
+        //image: [this.account.imageFile, []],
+      });
+    }
+    if (!!this.teamClub) {
+      this.teamClubForm = this.ufb.group({
+        name: [
+          this.teamClub.name,
+          [Validators.required, Validators.maxLength(128)],
+        ],
+        description: [this.teamClub.description, [Validators.maxLength(2000)]],
+      });
+    }
 
-    this.translateRoles();
+    if (!!this.account) this.translateRoles();
   }
 
-  CreateAccount() {
+  /*handleChange(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      this.message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      this.message.error(`${info.file.name} file upload failed.`);
+    }
+  }*/
+
+  UpdateAccount() {
+    //debugger;
     if (this.accountForm.valid) {
       this.accService.updateAccount(this.accountForm.value).subscribe({
         next: (res) => {
-          this.isVisible = false;
+          this.isVisibleAccount = false;
           window.location.reload();
         },
         error: (err) => {
@@ -61,6 +99,48 @@ export class BioComponent implements OnInit {
     }
   }
 
+  UpdateTeamClub() {
+    //debugger;
+    if (this.teamClubForm.valid && this.isTeam) {
+      this.teamService.updateTeam(this.teamClubForm.value).subscribe({
+        next: (res) => {
+          this.isVisibleTeamClub = false;
+          window.location.reload();
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.teamClubForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
+  deleteTeamClub() {
+    if (this.isTeam) {
+      this.teamService.deleteTeam().subscribe({
+        next: () => {
+          this.router.navigate(['team']);
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    }
+  }
+
+  beforeUpload(file: File) {
+    console.log(file);
+    return false;
+  }
+
   createMessage(): void {
     this.message.error(
       'Что-то пошло не так. Проверьте введенные данные или попробуйте позже'
@@ -71,16 +151,24 @@ export class BioComponent implements OnInit {
     return !!this.account.teamName;
   }
 
-  showModal(): void {
-    this.isVisible = true;
+  isItAccount(): boolean {
+    return !!this.account;
   }
 
-  handleOk(): void {
-    this.isVisible = false;
+  showModalAccount(): void {
+    this.isVisibleAccount = true;
   }
 
-  handleCancel(): void {
-    this.isVisible = false;
+  handleCancelAccount(): void {
+    this.isVisibleAccount = false;
+  }
+
+  showModalTeamClub(): void {
+    this.isVisibleTeamClub = true;
+  }
+
+  handleCancelTeamClub(): void {
+    this.isVisibleTeamClub = false;
   }
 
   translateRoles(): void {
