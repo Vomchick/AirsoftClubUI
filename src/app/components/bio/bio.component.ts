@@ -10,6 +10,7 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { AccountModel } from 'src/app/models/account.model';
 import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { AccountService } from 'src/app/service/account.service';
+import { ClubService } from 'src/app/service/club.service';
 import { TeamService } from 'src/app/service/team.service';
 
 @Component({
@@ -21,6 +22,8 @@ export class BioComponent implements OnInit {
   @Input() account!: AccountModel;
   @Input() teamClub!: TeamClubModel;
   @Input() isTeam!: boolean;
+  @Input() isPersonal: boolean = false;
+  @Input() CanChange: boolean = false;
 
   isVisibleTeamClub = false;
   isVisibleAccount = false;
@@ -34,6 +37,7 @@ export class BioComponent implements OnInit {
   constructor(
     private accService: AccountService,
     private teamService: TeamService,
+    private clubService: ClubService,
     private ufb: UntypedFormBuilder,
     private message: NzMessageService,
     private router: Router
@@ -112,6 +116,19 @@ export class BioComponent implements OnInit {
           console.log(err);
         },
       });
+    } else if (this.teamClubForm.valid) {
+      this.clubService
+        .updateClub(this.teamClub.id, this.teamClubForm.value)
+        .subscribe({
+          next: (res) => {
+            this.isVisibleTeamClub = false;
+            window.location.reload();
+          },
+          error: (err) => {
+            this.createMessage();
+            console.log(err);
+          },
+        });
     } else {
       Object.values(this.teamClubForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -126,7 +143,18 @@ export class BioComponent implements OnInit {
     if (this.isTeam) {
       this.teamService.deleteTeam().subscribe({
         next: () => {
-          this.router.navigate(['team']);
+          this.router.navigate(['teams']);
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    }
+    if (!this.isTeam) {
+      this.clubService.deleteClub(this.teamClub.id).subscribe({
+        next: () => {
+          this.router.navigate(['clubs']);
         },
         error: (err) => {
           this.createMessage();

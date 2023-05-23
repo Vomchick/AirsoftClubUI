@@ -1,0 +1,212 @@
+<div *ngIf="show">
+  <button
+    *ngIf="!gotPersonalClub()"
+    nz-button
+    nzType="dashed"
+    (click)="showModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Создать свой клуб
+  </button>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Создание клуба"
+    nzCentered
+    (nzOnCancel)="handleCancel()"
+    [nzFooter]="modalFooter"
+  >
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="clubForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
+            >Название</nz-form-label
+          >
+          <nz-form-control
+            [nzSm]="18"
+            [nzXs]="24"
+            nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
+          >
+            <input nz-input formControlName="name" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
+            >Описание/Дивиз</nz-form-label
+          >
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-textarea-count [nzMaxCharacterCount]="2000">
+              <textarea
+                formControlName="description"
+                id="description"
+                nz-input
+                rows="3"
+              ></textarea>
+            </nz-textarea-count>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      [disabled]="clubForm.invalid"
+      nzType="primary"
+      (click)="CreateClub()"
+    >
+      Создать
+    </button>
+  </ng-template>
+
+  <nz-divider
+    nzText="Мои клуб"
+    style="color: #dabc44"
+    *ngIf="gotPersonalClub()"
+  ></nz-divider>
+  <div *ngIf="gotPersonalClub()">
+    <div nz-row nzJustify="center">
+      <div nz-col nzSpan="20">
+        <nz-card
+          [nzBordered]="false"
+          (click)="openClub(personalClub.id)"
+          nzHoverable
+          style="min-height: 12em"
+        >
+          <nz-card-meta
+            nzTitle="{{ personalClub.name }}"
+            nzDescription="{{ personalClub.description }}"
+            [nzAvatar]="clubTemplate"
+          ></nz-card-meta>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+
+  <nz-divider
+    nzText="Мои подписки"
+    style="color: #dabc44"
+    *ngIf="gotMineClubs()"
+  ></nz-divider>
+  <div nz-row [nzGutter]="[24, 24]" *ngIf="gotMineClubs()">
+    <div *ngFor="let club of mineClubs" nz-col nzMd="8" nzSm="16" nzXs="24">
+      <nz-card
+        [nzBordered]="false"
+        nzHoverable
+        style="min-height: 12em"
+        *ngIf="
+          gotPersonalClub() && club.id == personalClub.id;
+          else firstElseBlock
+        "
+        (click)="openClub(club.id)"
+      >
+        <nz-card-meta
+          nzTitle="{{ club.name }}"
+          nzDescription="{{ club.description }}"
+          [nzAvatar]="clubTemplate"
+        ></nz-card-meta>
+      </nz-card>
+
+      <ng-template #firstElseBlock>
+        <nz-card
+          [nzBordered]="false"
+          nzHoverable
+          style="min-height: 12em"
+          [nzActions]="[actionLeaveClub]"
+        >
+          <nz-card-meta
+            nzTitle="{{ club.name }}"
+            nzDescription="{{ club.description }}"
+            [nzAvatar]="clubTemplate"
+            (click)="openClub(club.id)"
+          ></nz-card-meta>
+        </nz-card>
+      </ng-template>
+
+      <ng-template #actionLeaveClub>
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="round"
+          (click)="LeaveClub(club)"
+        >
+          Покинуть клуб
+        </button>
+        <!--<span (click)="LeaveClub(club)">Покинуть клуб</span>-->
+      </ng-template>
+    </div>
+  </div>
+
+  <nz-divider nzText="Все клубы" style="color: #dabc44"></nz-divider>
+  <div nz-row [nzGutter]="[24, 24]">
+    <div *ngFor="let club of clubs" nz-col nzMd="8" nzSm="16" nzXs="24">
+      <nz-card
+        [nzBordered]="false"
+        nzHoverable
+        style="min-height: 12em"
+        *ngIf="
+          gotPersonalClub() && club.id == personalClub.id;
+          else firstElseBlock
+        "
+        (click)="openClub(club.id)"
+      >
+        <nz-card-meta
+          nzTitle="{{ club.name }}"
+          nzDescription="{{ club.description }}"
+          [nzAvatar]="clubTemplate"
+        ></nz-card-meta>
+      </nz-card>
+
+      <ng-template #firstElseBlock>
+        <nz-card
+          [nzBordered]="false"
+          nzHoverable
+          style="min-height: 12em"
+          (click)="openClub(club.id)"
+          *ngIf="club.isJoined; else secondElseBlock"
+        >
+          <nz-card-meta
+            nzTitle="{{ club.name }}"
+            nzDescription="{{ club.description }}"
+            [nzAvatar]="clubTemplate"
+          ></nz-card-meta>
+        </nz-card>
+      </ng-template>
+
+      <ng-template #secondElseBlock>
+        <nz-card
+          [nzBordered]="false"
+          nzHoverable
+          style="min-height: 12em"
+          *ngIf="!club.isJoined"
+          [nzActions]="[actionJoinClub]"
+        >
+          <nz-card-meta
+            nzTitle="{{ club.name }}"
+            nzDescription="{{ club.description }}"
+            [nzAvatar]="clubTemplate"
+            (click)="openClub(club.id)"
+          ></nz-card-meta>
+        </nz-card>
+      </ng-template>
+
+      <ng-template #actionJoinClub>
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="round"
+          (click)="JoinClub(club)"
+        >
+          Присоединиться к клубу
+        </button>
+        <!--<span (click)="JoinClub(club)">Присоединиться к клубу</span>-->
+      </ng-template>
+    </div>
+  </div>
+
+  <ng-template #clubTemplate>
+    <nz-avatar [nzSize]="64" nzIcon="team"></nz-avatar>
+  </ng-template>
+</div>

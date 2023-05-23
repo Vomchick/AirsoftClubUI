@@ -22,11 +22,11 @@ export class AppComponent {
   }
 
   isTeamPage(): boolean {
-    return this.router.url === '/team';
+    return this.router.url === '/teams';
   }
 
   isClubPage(): boolean {
-    return this.router.url === '/club';
+    return this.router.url === '/clubs';
   }
 
   isAccountPage(): boolean {

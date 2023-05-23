@@ -9,6 +9,8 @@ import { TeamComponent } from './pages/team/team.component';
 import { BioComponent } from './components/bio/bio.component';
 import { InfoComponent } from './components/info/info.component';
 import { PersonalTeamComponent } from './pages/personal-team/personal-team.component';
+import { ClubsComponent } from './pages/clubs/clubs.component';
+import { ClubInfoComponent } from './pages/club-info/club-info.component';
 
 const routes: Routes = [
   {
@@ -38,16 +40,30 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'team',
+    path: 'teams',
     component: TeamComponent,
     loadChildren: () =>
       import('./pages/team/team.module').then((x) => x.TeamModule),
     canActivate: [AuthGuard],
   },
   {
-    path: 'teamInfo/:team',
+    path: 'teamInfo/:id',
     component: PersonalTeamComponent,
     canActivate: [AuthGuard],
+    //loadChildren: () =>import('./pages/personal-team/personal-team.module').then((x) => x.PersonalTeamModule),
+  },
+  {
+    path: 'clubs',
+    component: ClubsComponent,
+    loadChildren: () =>
+      import('./pages/clubs/clubs.module').then((x) => x.ClubsModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'clubInfo/:id',
+    component: ClubInfoComponent,
+    canActivate: [AuthGuard],
+    //loadChildren: () =>import('./pages/personal-team/personal-team.module').then((x) => x.PersonalTeamModule),
   },
 ];
 

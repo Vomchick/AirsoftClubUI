@@ -18,6 +18,7 @@ import { access_token_key } from './service/auth.service';
 import { auth_api_url, cards_api_url } from './app-injection-tokens';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 export function tokenGetter() {
   return localStorage.getItem(access_token_key);
@@ -38,6 +39,7 @@ registerLocaleData(en);
     NzMenuModule,
     NzMessageModule,
     NzModalModule,
+    NzIconModule,
 
     JwtModule.forRoot({
       config: {

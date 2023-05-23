@@ -15,8 +15,12 @@ export class TeamService {
     private router: Router
   ) {}
 
-  getTeam(): Observable<TeamClubModel> {
+  getPersonalTeam(): Observable<TeamClubModel> {
     return this.http.get<TeamClubModel>(this.apiUrl + 'Team');
+  }
+
+  getTeam(id: string): Observable<TeamClubModel> {
+    return this.http.get<TeamClubModel>(this.apiUrl + 'Team/' + id);
   }
 
   getAllTeams(): Observable<TeamClubModel[]> {

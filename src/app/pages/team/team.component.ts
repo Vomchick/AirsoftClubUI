@@ -25,7 +25,7 @@ export class TeamComponent {
     private teamService: TeamService,
     private ufb: UntypedFormBuilder,
     private message: NzMessageService,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class TeamComponent {
         if (response != null) {
           this.teams = response;
         }
-        this.teamService.getTeam().subscribe({
+        this.teamService.getPersonalTeam().subscribe({
           next: (response) => {
             if (response != null) {
               this.personalTeam = response;
@@ -55,13 +55,8 @@ export class TeamComponent {
     });
   }
 
-  openPersonalTeam(): void {
-    this.route.paramMap.pipe( 
-      switchMap(params => { 
-        this.selectedId = Number(params.get(‘id’)); 
-        return this.httpService.get(`/posts/${selectedId}`); 
-      })
-    );
+  openTeam(id: string): void {
+    this.router.navigate(['teamInfo', id]);
   }
 
   gotPersonalTeam(): boolean {
@@ -70,10 +65,6 @@ export class TeamComponent {
 
   showModal(): void {
     this.isVisible = true;
-  }
-
-  handleOk(): void {
-    this.isVisible = false;
   }
 
   handleCancel(): void {

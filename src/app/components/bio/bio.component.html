@@ -126,16 +126,29 @@
 </ng-template>
 
 <nz-card
-  *ngIf="!isItAccount()"
+  *ngIf="!isItAccount() && isPersonal && CanChange; else elseBlock"
   [nzBordered]="false"
   [nzActions]="[actionTeamClubEdit, actionTeamClubDelete]"
 >
   <nz-card-meta
     nzTitle="{{ teamClub.name }}"
     nzDescription="{{ teamClub.description }}"
-    [nzAvatar]="avatarTemplate"
+    [nzAvatar]="teamTemplate"
   ></nz-card-meta>
 </nz-card>
+
+<ng-template #elseBlock
+  ><nz-card *ngIf="!isItAccount()" [nzBordered]="false">
+    <nz-card-meta
+      nzTitle="{{ teamClub.name }}"
+      nzDescription="{{ teamClub.description }}"
+      [nzAvatar]="teamTemplate"
+    ></nz-card-meta> </nz-card
+></ng-template>
+
+<ng-template #teamTemplate>
+  <nz-avatar [nzSize]="128" nzIcon="team"></nz-avatar>
+</ng-template>
 
 <ng-template #actionTeamClubEdit>
   <span nz-icon nzType="edit" (click)="showModalTeamClub()"></span>
@@ -145,7 +158,7 @@
     nz-icon
     nzType="delete"
     nz-popconfirm
-    nzPopconfirmTitle="Вы точно хотите удалить свою команду?"
+    nzPopconfirmTitle="Вы точно хотите удалить?"
     nzPopconfirmPlacement="bottom"
     (nzOnConfirm)="deleteTeamClub()"
     [nzIcon]="customIcon"

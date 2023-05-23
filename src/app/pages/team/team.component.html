@@ -61,39 +61,49 @@
     </button>
   </ng-template>
 
+  <nz-divider
+    nzText="Моя команда"
+    style="color: #dabc44"
+    *ngIf="gotPersonalTeam()"
+  ></nz-divider>
   <div *ngIf="gotPersonalTeam()">
     <div nz-row nzJustify="center">
       <div nz-col nzSpan="20">
         <nz-card
           [nzBordered]="false"
-          (click)="openPersonalTeam()"
+          (click)="openTeam(personalTeam.id)"
           nzHoverable
           style="min-height: 12em"
         >
           <nz-card-meta
             nzTitle="{{ personalTeam.name }}"
             nzDescription="{{ personalTeam.description }}"
-            [nzAvatar]="avatarTemplate"
+            [nzAvatar]="teamTemplate"
           ></nz-card-meta>
         </nz-card>
       </div>
     </div>
   </div>
 
-  <nz-divider></nz-divider>
-  <div nz-row [nzGutter]="[24, 24]" nzJustify="center">
-    <div *ngFor="let team of teams" nz-col nzMd="10" nzSm="16" nzXs="24">
-      <nz-card [nzBordered]="false" nzHoverable style="min-height: 12em">
+  <nz-divider nzText="Все команды" style="color: #dabc44"></nz-divider>
+  <div nz-row [nzGutter]="[24, 24]">
+    <div *ngFor="let team of teams" nz-col nzMd="8" nzSm="16" nzXs="24">
+      <nz-card
+        [nzBordered]="false"
+        nzHoverable
+        style="min-height: 12em"
+        (click)="openTeam(team.id)"
+      >
         <nz-card-meta
           nzTitle="{{ team.name }}"
           nzDescription="{{ team.description }}"
-          [nzAvatar]="avatarTemplate"
+          [nzAvatar]="teamTemplate"
         ></nz-card-meta>
       </nz-card>
     </div>
   </div>
 
-  <ng-template #avatarTemplate>
-    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+  <ng-template #teamTemplate>
+    <nz-avatar [nzSize]="64" nzIcon="team"></nz-avatar>
   </ng-template>
 </div>

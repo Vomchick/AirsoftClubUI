@@ -1,9 +1,10 @@
 <div nz-row nzJustify="center" style="padding-bottom: 16px" *ngIf="show">
   <div nz-col nzSpan="16">
     <bio
-      [teamClub]="this.team"
-      [isTeam]="true"
+      [teamClub]="this.club"
+      [isTeam]="false"
       [isPersonal]="this.isActuallyPersonal"
+      [CanChange]="this.CanChange"
     ></bio>
   </div>
 </div>
