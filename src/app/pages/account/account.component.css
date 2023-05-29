@@ -9,3 +9,12 @@ form {
 .centered {
   text-align: center;
 }
+
+.createAccountForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  width: 300em;
+  transform: translate(-50%, -50%);
+}

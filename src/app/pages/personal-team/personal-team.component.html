@@ -1,14 +1,97 @@
-<div nz-row nzJustify="center" style="padding-bottom: 16px" *ngIf="show">
-  <div nz-col nzSpan="16">
-    <bio
-      [teamClub]="this.team"
-      [isTeam]="true"
-      [isPersonal]="this.isActuallyPersonal"
-    ></bio>
+<div *ngIf="show">
+  <nz-back-top></nz-back-top>
+  <div nz-row nzJustify="center" style="padding-bottom: 16px">
+    <div nz-col nzMd="18" nzSm="24">
+      <bio [teamClub]="this.team" [isTeam]="true" [TeamRole]="TeamRole"></bio>
+    </div>
   </div>
-</div>
-<div nz-row nzJustify="center">
-  <div nz-col nzSpan="16">
-    <info></info>
+
+  <div
+    nz-row
+    nzJustify="center"
+    *ngIf="requests != null && NotMember()"
+    style="padding-bottom: 16px"
+  >
+    <div nz-col nzMd="18" nzSm="24">
+      <nz-table #requestTable [nzData]="requests" [nzPageSize]="5">
+        <thead>
+          <tr>
+            <th>Позывной</th>
+            <th>Описание</th>
+            <th>Решение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of requestTable.data">
+            <td>{{ data.name }}</td>
+            <td>{{ data.description }}</td>
+            <td>
+              <button
+                nz-button
+                nzType="primary"
+                nz-popover
+                nzPopoverTitle="Выберите роль участника"
+                [(nzPopoverVisible)]="requestVisible"
+                nzPopoverTrigger="click"
+                [nzPopoverContent]="contentTemplate"
+                class="decisionButton"
+              >
+                Принять
+              </button>
+
+              <ng-template #contentTemplate>
+                <nz-select
+                  [(ngModel)]="selectedValue"
+                  style="padding-bottom: 16px"
+                  nzPlaceHolder="Какую роль выдадите участнику?"
+                  [nzShowArrow]="false"
+                  class="select"
+                >
+                  <nz-option
+                    *ngFor="let option of optionList"
+                    [nzValue]="option"
+                    [nzLabel]="option.label"
+                  ></nz-option>
+                </nz-select>
+                <br />
+                <button
+                  nz-button
+                  nzType="primary"
+                  (click)="PositiveRequest(data)"
+                >
+                  Подтвердить
+                </button>
+              </ng-template>
+
+              <button
+                nz-button
+                nzType="primary"
+                nzDanger
+                nz-popconfirm
+                nzPopconfirmTitle="Вы точно хотите удалить заявку?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="NegativeRequest(data)"
+                [nzIcon]="customIcon"
+                nzCancelText="Нет, не удалять"
+                nzOkText="Да, удалить"
+                class="decisionButton"
+              >
+                Удалить
+              </button>
+
+              <ng-template #customIcon>
+                <span nz-icon nzType="warning" style="color: #b4251b"></span>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <div nz-row nzJustify="center">
+    <div nz-col nzMd="18" nzSm="24">
+      <info></info>
+    </div>
   </div>
 </div>

@@ -6,7 +6,8 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { delay } from 'rxjs';
+import { TeamRoles } from 'src/app/app.module';
 import { AccountModel } from 'src/app/models/account.model';
 import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { AccountService } from 'src/app/service/account.service';
@@ -22,8 +23,8 @@ export class BioComponent implements OnInit {
   @Input() account!: AccountModel;
   @Input() teamClub!: TeamClubModel;
   @Input() isTeam!: boolean;
-  @Input() isPersonal: boolean = false;
-  @Input() CanChange: boolean = false;
+  @Input() TeamRole: TeamRoles = TeamRoles.Member;
+  @Input() ClubChange: boolean = false;
 
   isVisibleTeamClub = false;
   isVisibleAccount = false;
@@ -44,7 +45,22 @@ export class BioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //debugger;
+    /*if (!!this.teamClub && this.isTeam) {
+      this.teamService.getRights(this.teamClub.id).subscribe({
+        next: (res) => {
+          if (res != null && res != TeamRoles.Member) {
+            this.CanChange = true;
+          }
+        },
+      });
+    } else {
+      this.clubService.getRights(this.teamClub.id).subscribe({
+        next: (res) => {
+          if (res != null) this.CanChange = res;
+        },
+      });
+    }*/
+
     if (!!this.account) {
       this.accountForm = this.ufb.group({
         callsign: [
@@ -55,6 +71,7 @@ export class BioComponent implements OnInit {
         desc: [this.account.desc, [Validators.maxLength(2000)]],
         //image: [this.account.imageFile, []],
       });
+      this.translateRoles();
     }
     if (!!this.teamClub) {
       this.teamClubForm = this.ufb.group({
@@ -65,8 +82,6 @@ export class BioComponent implements OnInit {
         description: [this.teamClub.description, [Validators.maxLength(2000)]],
       });
     }
-
-    if (!!this.account) this.translateRoles();
   }
 
   /*handleChange(info: NzUploadChangeParam): void {
@@ -79,6 +94,16 @@ export class BioComponent implements OnInit {
       this.message.error(`${info.file.name} file upload failed.`);
     }
   }*/
+
+  NotMember() {
+    if (this.TeamRole != TeamRoles.Member) return true;
+    else return false;
+  }
+
+  IsCommander() {
+    if (this.TeamRole == TeamRoles.Commander) return true;
+    else return false;
+  }
 
   UpdateAccount() {
     //debugger;

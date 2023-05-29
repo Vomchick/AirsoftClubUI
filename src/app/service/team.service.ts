@@ -4,6 +4,8 @@ import { auth_api_url } from '../app-injection-tokens';
 import { Router } from '@angular/router';
 import { TeamClubModel } from '../models/teamClub.model';
 import { Observable } from 'rxjs';
+import { TeamRoles } from '../app.module';
+import { TeamRequestModel } from '../models/teamRequest.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +13,7 @@ import { Observable } from 'rxjs';
 export class TeamService {
   constructor(
     private http: HttpClient,
-    @Inject(auth_api_url) private apiUrl: string,
-    private router: Router
+    @Inject(auth_api_url) private apiUrl: string
   ) {}
 
   getPersonalTeam(): Observable<TeamClubModel> {
@@ -28,7 +29,6 @@ export class TeamService {
   }
 
   updateTeam(team: TeamClubModel): Observable<TeamClubModel> {
-    debugger;
     return this.http.put<TeamClubModel>(this.apiUrl + 'Team', team);
   }
 
@@ -38,5 +38,27 @@ export class TeamService {
 
   deleteTeam(): Observable<TeamClubModel> {
     return this.http.delete<TeamClubModel>(this.apiUrl + 'Team');
+  }
+
+  getRights(id: string): Observable<TeamRoles> {
+    return this.http.get<TeamRoles>(this.apiUrl + 'Team/rights/' + id);
+  }
+
+  getTeamRequests(teamId: string): Observable<TeamRequestModel[]> {
+    return this.http.get<TeamRequestModel[]>(
+      this.apiUrl + 'Team/Request/get/' + teamId
+    );
+  }
+
+  createTeamRequest(createRequest: { teamId: string; description: string }) {
+    return this.http.post(this.apiUrl + 'Team/Request/create', createRequest);
+  }
+
+  positiveTeamRequest(request: TeamRequestModel) {
+    return this.http.post(this.apiUrl + 'Team/Request/pos', request);
+  }
+
+  negativeTeamRequest(request: TeamRequestModel) {
+    return this.http.post(this.apiUrl + 'Team/Request/neg', request);
   }
 }

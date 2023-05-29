@@ -1,56 +1,66 @@
-<div *ngIf="show">
-  <nz-back-top></nz-back-top>
-  <div nz-row nzJustify="center" class="part">
-    <div nz-col nzMd="18" nzSm="24">
-      <bio
-        [teamClub]="this.club"
-        [isTeam]="false"
-        [ClubChange]="CanChange"
-      ></bio>
-    </div>
-  </div>
-  <div nz-row *ngIf="CanChange" [nzGutter]="16" nzJustify="center" class="part">
-    <div nz-col nzMd="6" nzSm="12" nzXs="24">
-      <button
-        nz-button
-        nzType="dashed"
-        (click)="showFieldModal()"
-        class="functionButton"
-      >
-        <span nz-icon nzType="plus"></span>
-        Добавить полигон
-      </button>
-    </div>
-    <div nz-col nzMd="6" nzSm="12" nzXs="24">
-      <button nz-button nzType="dashed" class="functionButton">
-        <span nz-icon nzType="plus"></span>
-        Добавить игру
-      </button>
-    </div>
-    <div nz-col nzMd="6" nzSm="12" nzXs="24">
-      <button nz-button nzType="dashed" class="functionButton">
-        <span nz-icon nzType="plus"></span>
-        Добавить запись
-      </button>
-    </div>
-  </div>
-  <div nz-row nzJustify="center" class="part">
-    <div nz-col nzMd="18" nzSm="24">
-      <info></info>
-    </div>
-  </div>
-  <div nz-row nzJustify="center">
-    <div *ngFor="let field of fields" nz-col nzMd="18" nzSm="24" class="part">
-      <field [field]="field" [CanChange]="CanChange"></field>
-    </div>
-  </div>
-</div>
+<nz-card
+  [nzBordered]="false"
+  [nzActions]="[actionFieldEdit, actionFieldDelete]"
+  nzTitle="Полигон {{ field.name }}"
+  [nzExtra]="extraTemplate"
+  *ngIf="CanChange; else CannotChange"
+>
+  <p>{{ field.text }}</p>
+  <p *ngIf="field.isCovered; else notCovered">Крытый полигон</p>
+  <ng-template #notCovered>
+    <p #notCovered>Открытый полигон</p>
+  </ng-template>
+  <p>Адрес: {{ field.address }}</p>
+  <p>GPS: {{ field.gps }}</p>
+</nz-card>
+
+<ng-template #CannotChange>
+  <nz-card
+    [nzBordered]="false"
+    nzTitle="Полигон {{ field.name }}"
+    [nzExtra]="extraTemplate"
+  >
+    <p>{{ field.text }}</p>
+    <p *ngIf="field.isCovered; else notCovered">Крытый полигон</p>
+    <ng-template #notCovered>
+      <p #notCovered>Открытый полигон</p>
+    </ng-template>
+    <p>Адрес: {{ field.address }}</p>
+    <p>GPS: {{ field.gps }}</p>
+  </nz-card>
+</ng-template>
+
+<ng-template #actionFieldEdit>
+  <span nz-icon nzType="edit" (click)="showModal()"></span>
+</ng-template>
+
+<ng-template #extraTemplate>
+  <span>{{ field.creationDt | date : "d.MM.y" }}</span>
+</ng-template>
+
+<ng-template #actionFieldDelete>
+  <span
+    nz-icon
+    nzType="delete"
+    nz-popconfirm
+    nzPopconfirmTitle="Вы точно хотите удалить полигон?"
+    nzPopconfirmPlacement="bottom"
+    (nzOnConfirm)="deleteField()"
+    [nzIcon]="customIcon"
+    nzCancelText="Нет, не удалять"
+    nzOkText="Да, удалить"
+  ></span>
+</ng-template>
+
+<ng-template #customIcon>
+  <span nz-icon nzType="warning" style="color: #b4251b"></span>
+</ng-template>
 
 <nz-modal
-  [(nzVisible)]="isVisibleField"
-  nzTitle="Добавление полигона"
+  [(nzVisible)]="isVisible"
+  nzTitle="Изменение информации о клубе"
   nzCentered
-  (nzOnCancel)="handleFieldCancel()"
+  (nzOnCancel)="handleCancel()"
   [nzFooter]="modalFooter"
 >
   <ng-container *nzModalContent>
@@ -83,7 +93,7 @@
               id="text"
               nz-input
               rows="5"
-              style="max-height: 200px"
+              style="max-height: 300px"
             ></textarea>
           </nz-textarea-count>
         </nz-form-control>
@@ -130,8 +140,8 @@
     nz-button
     [disabled]="fieldForm.invalid"
     nzType="primary"
-    (click)="CreateField()"
+    (click)="UpdateField()"
   >
-    Добавить
+    Обновить
   </button>
 </ng-template>

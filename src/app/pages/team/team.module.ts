@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { TeamComponent } from './team.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -17,6 +18,10 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { PersonalTeamComponent } from '../personal-team/personal-team.component';
 import { BioModule } from 'src/app/components/bio/bio.module';
 import { InfoModule } from 'src/app/components/info/info.module';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 
 @NgModule({
   declarations: [TeamComponent, PersonalTeamComponent],
@@ -38,6 +43,10 @@ import { InfoModule } from 'src/app/components/info/info.module';
     NzDividerModule,
     BioModule,
     InfoModule,
+    NzTableModule,
+    NzPopoverModule,
+    NzPopconfirmModule,
+    NzBackTopModule,
   ],
 })
 export class TeamModule {}

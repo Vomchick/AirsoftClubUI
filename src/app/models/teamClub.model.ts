@@ -3,4 +3,5 @@ export interface TeamClubModel {
   name: string;
   description: string;
   isJoined: boolean;
+  haveRequest: boolean;
 }

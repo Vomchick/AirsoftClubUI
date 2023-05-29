@@ -17,6 +17,9 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { BioModule } from 'src/app/components/bio/bio.module';
 import { InfoModule } from 'src/app/components/info/info.module';
 import { ClubInfoComponent } from '../club-info/club-info.component';
+import { FieldModule } from 'src/app/components/field/field.module';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @NgModule({
   declarations: [ClubsComponent, ClubInfoComponent],
@@ -38,6 +41,9 @@ import { ClubInfoComponent } from '../club-info/club-info.component';
     NzDividerModule,
     BioModule,
     InfoModule,
+    FieldModule,
+    NzBackTopModule,
+    NzRadioModule,
   ],
 })
 export class ClubsModule {}

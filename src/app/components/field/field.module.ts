@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccountComponent } from './account.component';
+import { FieldComponent } from './field.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -13,16 +12,14 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { BioModule } from 'src/app/components/bio/bio.module';
-import { InfoModule } from 'src/app/components/info/info.module';
-import { NzBackTopModule } from 'ng-zorro-antd/back-top';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @NgModule({
-  declarations: [AccountComponent],
+  declarations: [FieldComponent],
   imports: [
     CommonModule,
     NzCardModule,
-    NzAvatarModule,
     NzGridModule,
     FormsModule,
     ReactiveFormsModule,
@@ -34,9 +31,9 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
     NzModalModule,
     NzUploadModule,
     NzIconModule,
-    BioModule,
-    InfoModule,
-    NzBackTopModule,
+    NzPopconfirmModule,
+    NzRadioModule,
   ],
+  exports: [FieldComponent],
 })
-export class AccountModule {}
+export class FieldModule {}

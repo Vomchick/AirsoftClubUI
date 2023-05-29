@@ -5,8 +5,13 @@
       <strong>Airsoft Club</strong>
     </a>
   </nz-header>
-  <nz-layout>
-    <nz-sider *ngIf="isLoggedIn()" nzCollapsible nzTheme="dark" nzWidth="200px">
+  <nz-layout style="display: flex; flex-flow: row wrap">
+    <nz-sider
+      *ngIf="isLoggedIn() && haveAccount"
+      nzCollapsible
+      nzTheme="dark"
+      nzWidth="200px"
+    >
       <ul nz-menu nzTheme="dark" nzMode="inline">
         <li nz-menu-item [nzSelected]="isAccountPage()" routerLink="account">
           <span nz-icon nzType="user" style="font-size: 20px"></span>

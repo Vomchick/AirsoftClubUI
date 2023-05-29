@@ -61,6 +61,7 @@
             id="gameRole"
             nzPlaceHolder="Выберите роль"
             [nzShowArrow]="false"
+            style="color: white"
           >
             <nz-option nzLabel="Штурмовик" nzValue="Stormtrooper"></nz-option>
             <nz-option nzLabel="Снайпер" nzValue="Sniper"></nz-option>
@@ -81,7 +82,8 @@
               formControlName="desc"
               id="desc"
               nz-input
-              rows="3"
+              rows="5"
+              style="max-height: 300px"
             ></textarea>
           </nz-textarea-count>
         </nz-form-control>
@@ -126,7 +128,7 @@
 </ng-template>
 
 <nz-card
-  *ngIf="!isItAccount() && isPersonal && CanChange; else elseBlock"
+  *ngIf="(!isItAccount() && ClubChange) || IsCommander(); else firstElseBlock"
   [nzBordered]="false"
   [nzActions]="[actionTeamClubEdit, actionTeamClubDelete]"
 >
@@ -137,7 +139,20 @@
   ></nz-card-meta>
 </nz-card>
 
-<ng-template #elseBlock
+<ng-template #firstElseBlock
+  ><nz-card
+    *ngIf="!isItAccount() && NotMember(); else secondElseBlock"
+    [nzBordered]="false"
+    [nzActions]="[actionTeamClubEdit]"
+  >
+    <nz-card-meta
+      nzTitle="{{ teamClub.name }}"
+      nzDescription="{{ teamClub.description }}"
+      [nzAvatar]="teamTemplate"
+    ></nz-card-meta> </nz-card
+></ng-template>
+
+<ng-template #secondElseBlock
   ><nz-card *ngIf="!isItAccount()" [nzBordered]="false">
     <nz-card-meta
       nzTitle="{{ teamClub.name }}"
@@ -204,6 +219,7 @@
               id="description"
               nz-input
               rows="3"
+              style="max-height: 200px"
             ></textarea>
           </nz-textarea-count>
         </nz-form-control>

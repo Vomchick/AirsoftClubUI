@@ -6,7 +6,9 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { CreateRequestModel } from 'src/app/models/createRequest.model';
 import { TeamClubModel } from 'src/app/models/teamClub.model';
+import { TeamRequestModel } from 'src/app/models/teamRequest.model';
 import { TeamService } from 'src/app/service/team.service';
 
 @Component({
@@ -20,6 +22,8 @@ export class TeamComponent {
   isVisible = false;
   teamForm!: UntypedFormGroup;
   show: boolean = false;
+  requestVisible: boolean = false;
+  requestDescription: string = '';
 
   constructor(
     private teamService: TeamService,
@@ -29,18 +33,20 @@ export class TeamComponent {
   ) {}
 
   ngOnInit(): void {
+    this.teamService.getPersonalTeam().subscribe({
+      next: (response) => {
+        if (response != null) {
+          this.personalTeam = response;
+          this.openTeam(this.personalTeam.id);
+        }
+      },
+    });
     this.teamService.getAllTeams().subscribe({
       next: (response) => {
         if (response != null) {
           this.teams = response;
         }
-        this.teamService.getPersonalTeam().subscribe({
-          next: (response) => {
-            if (response != null) {
-              this.personalTeam = response;
-            }
-          },
-        });
+
         this.show = true;
       },
       error: (err) => {
@@ -53,6 +59,17 @@ export class TeamComponent {
       name: [null, [Validators.required, Validators.maxLength(128)]],
       description: [null, [Validators.maxLength(2000)]],
     });
+  }
+
+  CreateRequest(team: TeamClubModel) {
+    this.teamService
+      .createTeamRequest(
+        new CreateRequestModel(team.id, this.requestDescription)
+      )
+      .subscribe({
+        next: () => window.location.reload(),
+      });
+    this.requestVisible = false;
   }
 
   openTeam(id: string): void {
