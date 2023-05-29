@@ -24,6 +24,12 @@ export function tokenGetter() {
   return localStorage.getItem(access_token_key);
 }
 
+export const enum TeamRoles {
+  Commander,
+  DeputyCommander,
+  Member,
+}
+
 registerLocaleData(en);
 
 @NgModule({
