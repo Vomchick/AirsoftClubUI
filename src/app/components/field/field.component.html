@@ -35,7 +35,7 @@
 </ng-template>
 
 <ng-template #extraTemplate>
-  <span>{{ field.creationDt | date : "d.MM.y" }}</span>
+  <span>{{ field.creationDt | date : "d MMM y" }}</span>
 </ng-template>
 
 <ng-template #actionFieldDelete>
@@ -64,14 +64,10 @@
   [nzFooter]="modalFooter"
 >
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="fieldForm">
+    <form nz-form [formGroup]="fieldForm" nzLayout="vertical">
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-          >Название</nz-form-label
-        >
+        <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
         >
           <input nz-input formControlName="name" id="name" />
@@ -79,12 +75,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired="" nzFor="text"
-          >Описание</nz-form-label
-        >
+        <nz-form-label nzRequired="" nzFor="text">Описание</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 2000 символов"
         >
           <nz-textarea-count [nzMaxCharacterCount]="2000">
@@ -100,11 +92,7 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-control
-          [nzSm]="{ span: 18, offset: 6 }"
-          [nzXs]="24"
-          nzErrorTip="Это поле обязательно для заполнения"
-        >
+        <nz-form-control nzErrorTip="Это поле обязательно для заполнения">
           <nz-radio-group formControlName="isCovered">
             <label nz-radio [nzValue]="false">Открытый</label>
             <label nz-radio [nzValue]="true">Крытый</label>
@@ -113,21 +101,15 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="address"
-          >Адрес</nz-form-label
-        >
-        <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
-          nzErrorTip="Это поле обязательно для заполнения"
-        >
+        <nz-form-label nzRequired nzFor="address">Адрес</nz-form-label>
+        <nz-form-control nzErrorTip="Это поле обязательно для заполнения">
           <input nz-input formControlName="address" id="adress" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="gps">GPS</nz-form-label>
-        <nz-form-control [nzSm]="18" [nzXs]="24">
+        <nz-form-label nzFor="gps">GPS</nz-form-label>
+        <nz-form-control>
           <input nz-input formControlName="gps" id="gps" />
         </nz-form-control>
       </nz-form-item>

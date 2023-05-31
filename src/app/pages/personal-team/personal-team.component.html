@@ -24,7 +24,9 @@
         <tbody>
           <tr *ngFor="let data of requestTable.data">
             <td>{{ data.name }}</td>
-            <td>{{ data.description }}</td>
+            <td nz-popover [nzPopoverContent]="data.description">
+              {{ data.description }}
+            </td>
             <td>
               <button
                 nz-button

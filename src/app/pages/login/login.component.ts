@@ -15,6 +15,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class LoginComponent implements OnInit {
   loginForm!: UntypedFormGroup;
+  passwordVisible = false;
 
   constructor(
     private authService: AuthService,
@@ -48,7 +49,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['account']);
+          window.location.reload();
+          //this.router.navigate(['account']);
         },
         error: (err) => {
           this.createMessage();

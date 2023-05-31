@@ -33,14 +33,10 @@
   [nzFooter]="modalAccountFooter"
 >
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="accountForm">
+    <form nz-form [formGroup]="accountForm" nzLayout="vertical">
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="callsign"
-          >Позывной</nz-form-label
-        >
+        <nz-form-label nzRequired nzFor="callsign">Позывной</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
         >
           <input nz-input formControlName="callsign" id="callsign" />
@@ -48,14 +44,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="gameRole"
-          >Роль в игре</nz-form-label
-        >
-        <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
-          nzErrorTip="Выберите свою роль"
-        >
+        <nz-form-label nzRequired nzFor="gameRole">Роль в игре</nz-form-label>
+        <nz-form-control nzErrorTip="Выберите свою роль">
           <nz-select
             formControlName="gameRole"
             id="gameRole"
@@ -73,10 +63,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="desc"
-          >Описание/Дивиз</nz-form-label
-        >
-        <nz-form-control [nzSm]="18" [nzXs]="24">
+        <nz-form-label nzFor="desc">Описание/Дивиз</nz-form-label>
+        <nz-form-control>
           <nz-textarea-count [nzMaxCharacterCount]="2000">
             <textarea
               formControlName="desc"
@@ -194,14 +182,10 @@
   [nzFooter]="modalTeamClubFooter"
 >
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="teamClubForm">
+    <form nz-form [formGroup]="teamClubForm" nzLayout="vertical">
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-          >Название</nz-form-label
-        >
+        <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
         >
           <input nz-input formControlName="name" id="name" />
@@ -209,10 +193,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
-          >Описание/Дивиз</nz-form-label
-        >
-        <nz-form-control [nzSm]="18" [nzXs]="24">
+        <nz-form-label nzFor="description">Описание/Дивиз</nz-form-label>
+        <nz-form-control>
           <nz-textarea-count [nzMaxCharacterCount]="2000">
             <textarea
               formControlName="description"

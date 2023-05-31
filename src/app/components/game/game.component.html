@@ -1,0 +1,170 @@
+<nz-card
+  [nzBordered]="false"
+  [nzActions]="[actionGameEdit, actionGameDelete]"
+  nzTitle="Игра {{ game.name }}"
+  [nzExtra]="extraTemplate"
+  *ngIf="CanChange; else CannotChange"
+>
+  <p>{{ game.text }}</p>
+  <p>Полигон -</p>
+  <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
+  <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
+    Цена с прокатным снаряжением - {{ game.rentalPrice }}
+  </p>
+  <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
+  <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+</nz-card>
+
+<ng-template #CannotChange>
+  <nz-card
+    [nzBordered]="false"
+    nzTitle="Полигон {{ game.name }}"
+    [nzExtra]="extraTemplate"
+  >
+    <p>{{ game.text }}</p>
+    <p>Полигон -</p>
+    <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
+    <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
+      Цена с прокатным снаряжением - {{ game.rentalPrice }}
+    </p>
+    <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
+    <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+  </nz-card>
+</ng-template>
+
+<ng-template #actionGameEdit>
+  <span nz-icon nzType="edit" (click)="showModal()"></span>
+</ng-template>
+
+<ng-template #extraTemplate>
+  <span>{{ game.creationDt | date : "d MMM y" }}</span>
+</ng-template>
+
+<ng-template #actionGameDelete>
+  <span
+    nz-icon
+    nzType="delete"
+    nz-popconfirm
+    nzPopconfirmTitle="Вы точно хотите удалить игру?"
+    nzPopconfirmPlacement="bottom"
+    (nzOnConfirm)="deleteGame()"
+    [nzIcon]="customIcon"
+    nzCancelText="Нет, не удалять"
+    nzOkText="Да, удалить"
+  ></span>
+</ng-template>
+
+<ng-template #customIcon>
+  <span nz-icon nzType="warning" style="color: #b4251b"></span>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Изменение информации о игре"
+  nzCentered
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="gameForm" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
+        <nz-form-control
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
+        >
+          <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired="" nzFor="text">Описание</nz-form-label>
+        <nz-form-control
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 2000 символов"
+        >
+          <nz-textarea-count [nzMaxCharacterCount]="2000">
+            <textarea
+              formControlName="text"
+              id="text"
+              nz-input
+              rows="5"
+              style="max-height: 300px"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div nz-row class="nz-form-item">
+        <div nz-col nzSpan="7">
+          <nz-form-label nzRequired nzFor="defaultPrice"
+            >Цена со своим</nz-form-label
+          >
+          <nz-form-control>
+            <nz-input-number-group nzPrefix="BYN">
+              <nz-input-number
+                formControlName="defaultPrice"
+                id="defaultPrice"
+                [nzMin]="0"
+                [nzStep]="1"
+              ></nz-input-number>
+            </nz-input-number-group>
+          </nz-form-control>
+        </div>
+
+        <div nz-col nzSpan="7">
+          <nz-form-label nzFor="rentalPrice">Цена с прокатным</nz-form-label>
+          <nz-form-control>
+            <nz-input-number-group nzPrefix="BYN">
+              <nz-input-number
+                formControlName="rentalPrice"
+                id="rentalPrice"
+                [nzMin]="0"
+                [nzStep]="1"
+              ></nz-input-number>
+            </nz-input-number-group>
+          </nz-form-control>
+        </div>
+
+        <div nz-col nzFlex="auto">
+          <nz-form-label nzFor="startDt" nzRequired>
+            Дата и время начала
+          </nz-form-label>
+          <nz-form-control>
+            <nz-date-picker
+              formControlName="startDt"
+              id="startDt"
+              nzFormat="yyyy-MM-dd HH:mm"
+              [nzDisabledDate]="disabledDate"
+              [nzShowTime]="timeOptions"
+              [nzDisabledTime]="disabledDateTime"
+            ></nz-date-picker>
+          </nz-form-control>
+        </div>
+      </div>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Это поле обязательно для заполнения">
+          <nz-radio-group formControlName="gameType">
+            <label nz-radio [nzValue]="6">Сталкерстрайк</label>
+            <label nz-radio [nzValue]="1">Воскреска</label>
+            <label nz-radio [nzValue]="5">Сюжетка</label>
+            <label nz-radio [nzValue]="4">Спидсофт</label>
+            <label nz-radio [nzValue]="3">Закрытие сезона</label>
+            <label nz-radio [nzValue]="2">Открытие сезона</label>
+            <label nz-radio [nzValue]="0">Пистолетка</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+  <button
+    nz-button
+    [disabled]="gameForm.invalid"
+    nzType="primary"
+    (click)="UpdateGame()"
+  >
+    Обновить
+  </button>
+</ng-template>

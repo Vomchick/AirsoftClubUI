@@ -26,9 +26,9 @@
           <nz-form-control
             nzErrorTip="Минимум 8 символов, как минимум одна цифра и буква"
           >
-            <nz-input-group nzPrefixIcon="unlock">
+            <nz-input-group nzPrefixIcon="unlock" [nzSuffix]="password">
               <input
-                type="password"
+                [type]="passwordVisible ? 'text' : 'password'"
                 nz-input
                 formControlName="password"
                 placeholder="Пароль"
@@ -39,9 +39,9 @@
         </nz-form-item>
         <nz-form-item>
           <nz-form-control nzErrorTip="Пароли не совпадают">
-            <nz-input-group nzPrefixIcon="lock">
+            <nz-input-group nzPrefixIcon="lock" [nzSuffix]="passwordConfirm">
               <input
-                type="password"
+                [type]="passwordConfirmVisible ? 'text' : 'password'"
                 nz-input
                 formControlName="confirmPassword"
                 placeholder="Подтвердите пароль"
@@ -49,6 +49,22 @@
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
+
+        <ng-template #password>
+          <span
+            nz-icon
+            [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"
+          ></span>
+        </ng-template>
+        <ng-template #passwordConfirm>
+          <span
+            nz-icon
+            [nzType]="passwordConfirmVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordConfirmVisible = !passwordConfirmVisible"
+          ></span>
+        </ng-template>
+
         <a class="login-form-register" routerLink="/login"
           >Есть аккаунт? Войдите</a
         >

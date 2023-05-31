@@ -15,14 +15,17 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
+  registerForm!: UntypedFormGroup;
+
+  passwordVisible = false;
+  passwordConfirmVisible = false;
+
   constructor(
     private authService: AuthService,
     private ufb: UntypedFormBuilder,
     private router: Router,
     private message: NzMessageService
   ) {}
-
-  registerForm!: UntypedFormGroup;
 
   confirmationValidator = (
     control: UntypedFormControl
@@ -70,7 +73,8 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['account']);
+          window.location.reload();
+          //this.router.navigate(['account']);
         },
         error: (err) => {
           this.createMessage();

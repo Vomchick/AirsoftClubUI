@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClubsComponent } from './clubs.component';
+import { GameComponent } from './game.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -13,25 +12,18 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { BioModule } from 'src/app/components/bio/bio.module';
-import { InfoModule } from 'src/app/components/info/info.module';
-import { ClubInfoComponent } from '../club-info/club-info.component';
-import { FieldModule } from 'src/app/components/field/field.module';
-import { NzBackTopModule } from 'ng-zorro-antd/back-top';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { GameModule } from 'src/app/components/game/game.module';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
-import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 @NgModule({
-  declarations: [ClubsComponent, ClubInfoComponent],
+  declarations: [GameComponent],
   imports: [
     CommonModule,
     NzCardModule,
-    NzAvatarModule,
     NzGridModule,
     FormsModule,
     ReactiveFormsModule,
@@ -43,17 +35,13 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzModalModule,
     NzUploadModule,
     NzIconModule,
-    NzDividerModule,
-    BioModule,
-    InfoModule,
-    FieldModule,
-    NzBackTopModule,
+    NzPopconfirmModule,
     NzRadioModule,
-    GameModule,
-    NzDatePickerModule,
-    NzPopoverModule,
-    NzTimePickerModule,
     NzInputNumberModule,
+    NzTimePickerModule,
+    NzDatePickerModule,
+    NzPopoverModule
   ],
+  exports: [GameComponent],
 })
-export class ClubsModule {}
+export class GameModule {}

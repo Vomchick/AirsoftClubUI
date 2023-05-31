@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FieldModel } from 'src/app/models/field.model';
 import { FieldService } from 'src/app/service/field.service';
+import { ru_RU, NzI18nService } from 'ng-zorro-antd/i18n';
 
 @Component({
   selector: 'field',
@@ -31,10 +32,13 @@ export class FieldComponent implements OnInit {
     private fieldService: FieldService,
     private ufb: UntypedFormBuilder,
     private message: NzMessageService,
-    private router: Router
+    private router: Router,
+    private i18n: NzI18nService
   ) {}
 
   ngOnInit(): void {
+    this.i18n.setLocale(ru_RU);
+
     this.fieldForm = this.ufb.group({
       name: [this.field.name, [Validators.required, Validators.maxLength(128)]],
       text: [

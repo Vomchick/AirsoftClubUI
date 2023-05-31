@@ -11,7 +11,7 @@ import { AccountService } from './service/account.service';
 export class AppComponent implements OnInit {
   isCollapsed = false;
   title = 'Cards';
-  haveAccount: boolean = false;
+  public haveAccount: boolean = false;
 
   constructor(
     private authService: AuthService,

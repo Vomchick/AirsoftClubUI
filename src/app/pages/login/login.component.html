@@ -22,9 +22,9 @@
       <nz-form-control
         nzErrorTip="Минимум 8 символов, как минимум одна цифра и буква"
       >
-        <nz-input-group nzPrefixIcon="lock">
+        <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
           <input
-            type="password"
+            [type]="passwordVisible ? 'text' : 'password'"
             nz-input
             formControlName="password"
             placeholder="Пароль"
@@ -32,6 +32,15 @@
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
+
+    <ng-template #suffixTemplate>
+      <span
+        nz-icon
+        [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+        (click)="passwordVisible = !passwordVisible"
+      ></span>
+    </ng-template>
+
     <a class="login-form-register" routerLink="/register"
       >Нет аккаунта? Создайте</a
     >

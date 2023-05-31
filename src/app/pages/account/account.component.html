@@ -17,7 +17,12 @@
     <div class="createAccountForm">
       <nz-card nzBorderless class="createForm">
         <h1 nz-typography class="centered">Создание аккаунта</h1>
-        <form nz-form [formGroup]="accountForm" (ngSubmit)="CreateAccount()">
+        <form
+          nz-form
+          [formGroup]="accountForm"
+          (ngSubmit)="CreateAccount()"
+          nzLayout="vertical"
+        >
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="callsign"
               >Позывной</nz-form-label

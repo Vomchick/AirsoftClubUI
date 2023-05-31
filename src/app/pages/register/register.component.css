@@ -24,3 +24,6 @@ nz-card {
 .centered {
   text-align: center;
 }
+nz-form-item {
+  margin-bottom: 24px;
+}
