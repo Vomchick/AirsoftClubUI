@@ -18,6 +18,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 @NgModule({
   declarations: [GameComponent],
@@ -40,7 +42,9 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
     NzInputNumberModule,
     NzTimePickerModule,
     NzDatePickerModule,
-    NzPopoverModule
+    NzPopoverModule,
+    NzCheckboxModule,
+    NzAlertModule,
   ],
   exports: [GameComponent],
 })

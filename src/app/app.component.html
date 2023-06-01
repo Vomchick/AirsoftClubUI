@@ -58,13 +58,15 @@
           <span>Новости</span>
         </li>
         <li nz-menu-item [nzSelected]="isTeamPage()" routerLink="teams">
-          <span
-            nz-icon
-            nzType="team"
-            nzTheme="outline"
-            style="font-size: 20px"
-          ></span>
-          <span>Моя команда</span>
+          <nz-badge [nzCount]="requestsCount" [nzOffset]="[10, 0]">
+            <span
+              nz-icon
+              nzType="team"
+              nzTheme="outline"
+              style="font-size: 20px"
+            ></span>
+            <span>Моя команда</span>
+          </nz-badge>
         </li>
         <li nz-menu-item [nzSelected]="isClubPage()" routerLink="clubs">
           <span nz-icon style="font-size: 20px">

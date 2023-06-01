@@ -3,7 +3,7 @@
   [nzActions]="[actionGameEdit, actionGameDelete]"
   nzTitle="Игра {{ game.name }}"
   [nzExtra]="extraTemplate"
-  *ngIf="CanChange; else CannotChange"
+  *ngIf="CanChange; else CannotChangeWithTeam"
 >
   <p>{{ game.text }}</p>
   <p>Полигон -</p>
@@ -15,11 +15,13 @@
   <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
 </nz-card>
 
-<ng-template #CannotChange>
+<ng-template #CannotChangeWithTeam>
   <nz-card
     [nzBordered]="false"
-    nzTitle="Полигон {{ game.name }}"
+    nzTitle="Игра {{ game.name }}"
     [nzExtra]="extraTemplate"
+    *ngIf="PersonalTeam != null && CanChangeTeam(); else CannotChange"
+    [nzActions]="[soloRegister, teamRegister]"
   >
     <p>{{ game.text }}</p>
     <p>Полигон -</p>
@@ -29,11 +31,142 @@
     </p>
     <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
     <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+    <div *ngIf="teamRegistration != null; else noTeam">
+      <nz-alert
+        nzType="success"
+        nzMessage="Вы записались на эту игру с командой"
+      ></nz-alert>
+    </div>
+  </nz-card>
+</ng-template>
+
+<ng-template #noTeam>
+  <nz-alert
+    *ngIf="soloRegistration != null"
+    nzType="success"
+    nzMessage="Вы записались на эту игру"
+  ></nz-alert>
+</ng-template>
+
+<ng-template #CannotChange>
+  <nz-card
+    [nzBordered]="false"
+    nzTitle="Игра {{ game.name }}"
+    [nzExtra]="extraTemplate"
+    [nzActions]="[soloRegister]"
+  >
+    <p>{{ game.text }}</p>
+    <p>Полигон -</p>
+    <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
+    <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
+      Цена с прокатным снаряжением - {{ game.rentalPrice }}
+    </p>
+    <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
+    <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+    <div *ngIf="teamRegistration != null; else noTeam">
+      <nz-alert
+        nzType="success"
+        nzMessage="Вы записались на эту игру с командой"
+      ></nz-alert>
+    </div>
   </nz-card>
 </ng-template>
 
 <ng-template #actionGameEdit>
   <span nz-icon nzType="edit" (click)="showModal()"></span>
+</ng-template>
+
+<ng-template #soloRegister>
+  <span
+    nz-icon
+    nz-popover
+    nzPopoverTitle="Запоните форму"
+    [(nzPopoverVisible)]="soloRegisterVisible"
+    nzPopoverTrigger="click"
+    [nzPopoverContent]="SoloRegisterContent"
+    nzType="user-add"
+  ></span>
+</ng-template>
+
+<ng-template #SoloRegisterContent>
+  <form
+    nz-form
+    [formGroup]="soloRegisterForm"
+    nzLayout="inline"
+    (submit)="SoloRegistration()"
+  >
+    <nz-form-item>
+      <nz-form-control>
+        <label nz-checkbox formControlName="needARent">Нужен прокат</label>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select
+          formControlName="pickUp"
+          nzPlaceHolder="Как вы доберетесь до места?"
+          [nzShowArrow]="false"
+          class="select"
+        >
+          <nz-option nzLabel="На машине" [nzValue]="2"></nz-option>
+          <nz-option nzLabel="На машине, есть место" [nzValue]="3"></nz-option>
+          <nz-option nzLabel="Нужно подвезти" [nzValue]="1"></nz-option>
+          <nz-option
+            nzLabel="Общественным транспортом"
+            [nzValue]="0"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button nzType="primary" [disabled]="!soloRegisterForm.valid">
+          Подтвердить
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
+
+<ng-template #teamRegister>
+  <span
+    nz-icon
+    nz-popover
+    nzPopoverTitle="Заполните форму"
+    [(nzPopoverVisible)]="teamRegisterVisible"
+    nzPopoverTrigger="click"
+    [nzPopoverContent]="teamRegisterContent"
+    nzType="usergroup-add"
+  ></span>
+</ng-template>
+
+<ng-template #teamRegisterContent>
+  <form
+    nz-form
+    nzLayout="inline"
+    [formGroup]="teamRegisterForm"
+    (submit)="TeamRegistration()"
+  >
+    <nz-form-item>
+      <nz-form-label nzRequired nzFor="peopleCount"
+        >Сколько человек из команды</nz-form-label
+      >
+      <nz-form-control>
+        <nz-input-number
+          formControlName="peopleCount"
+          id="peopleCount"
+          [nzMin]="1"
+          [nzStep]="1"
+          [nzMax]="maxPeopleCount"
+        ></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button nzType="primary">Подтвердить</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
 </ng-template>
 
 <ng-template #extraTemplate>

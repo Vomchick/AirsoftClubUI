@@ -18,14 +18,10 @@
     [nzFooter]="modalFooter"
   >
     <ng-container *nzModalContent>
-      <form nz-form [formGroup]="teamForm">
+      <form nz-form [formGroup]="teamForm" nzLayout="vertical">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-            >Название</nz-form-label
-          >
+          <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
           <nz-form-control
-            [nzSm]="18"
-            [nzXs]="24"
             nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
           >
             <input nz-input formControlName="name" id="name" />
@@ -33,10 +29,8 @@
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
-            >Описание/Дивиз</nz-form-label
-          >
-          <nz-form-control [nzSm]="18" [nzXs]="24">
+          <nz-form-label nzFor="description">Описание/Дивиз</nz-form-label>
+          <nz-form-control>
             <nz-textarea-count [nzMaxCharacterCount]="2000">
               <textarea
                 formControlName="description"
@@ -146,12 +140,14 @@
       </ng-template>
 
       <ng-template #contentTemplate>
-        <textarea
-          [(ngModel)]="requestDescription"
-          rows="4"
-          nz-input
-          style="margin-bottom: 16px"
-        ></textarea>
+        <nz-textarea-count [nzMaxCharacterCount]="500" style="width: 300px">
+          <textarea
+            [(ngModel)]="requestDescription"
+            rows="4"
+            nz-input
+            style="margin-bottom: 16px; max-height: 150px"
+          ></textarea>
+        </nz-textarea-count>
         <button nz-button nzType="primary" (click)="CreateRequest(team)">
           Подтвердить
         </button>

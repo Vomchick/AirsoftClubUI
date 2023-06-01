@@ -20,6 +20,7 @@ import { auth_api_url, cards_api_url } from './app-injection-tokens';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 
 export function tokenGetter() {
   return localStorage.getItem(access_token_key);
@@ -41,6 +42,13 @@ export const enum GameType {
   StalkerStrike,
 }
 
+export const enum PickUp {
+  PublicTransport,
+  NeedARide,
+  GetByCar,
+  GetByCarHaveSpace,
+}
+
 registerLocaleData(ru);
 
 @NgModule({
@@ -57,6 +65,7 @@ registerLocaleData(ru);
     NzMessageModule,
     NzModalModule,
     NzIconModule,
+    NzBadgeModule,
 
     JwtModule.forRoot({
       config: {

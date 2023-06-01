@@ -20,6 +20,10 @@ export class TeamService {
     return this.http.get<TeamClubModel>(this.apiUrl + 'Team');
   }
 
+  getPeopleCount(teamId: string): Observable<number> {
+    return this.http.get<number>(this.apiUrl + 'Team/people/' + teamId);
+  }
+
   getTeam(id: string): Observable<TeamClubModel> {
     return this.http.get<TeamClubModel>(this.apiUrl + 'Team/' + id);
   }

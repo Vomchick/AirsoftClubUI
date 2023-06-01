@@ -46,7 +46,15 @@
   </div>
   <div nz-row nzJustify="center">
     <div *ngFor="let game of games" nz-col nzMd="18" nzSm="24" class="part">
-      <game [game]="game" [CanChange]="CanChange"></game>
+      <game
+        [game]="game"
+        [CanChange]="CanChange"
+        [TeamRights]="TeamRights"
+        [PersonalTeam]="PersonalTeam"
+        [soloRegistration]="GetSoloRegistration(game.id)"
+        [teamRegistration]="GetTeamRegistration(game.id)"
+        [maxPeopleCount]="maxPeopleCount"
+      ></game>
     </div>
   </div>
   <div nz-row nzJustify="center">

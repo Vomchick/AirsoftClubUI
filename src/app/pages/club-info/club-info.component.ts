@@ -16,6 +16,11 @@ import { ClubService } from 'src/app/service/club.service';
 import { FieldService } from 'src/app/service/field.service';
 import { GameService } from 'src/app/service/game.service';
 import { differenceInCalendarDays } from 'date-fns';
+import { TeamService } from 'src/app/service/team.service';
+import { TeamRoles } from 'src/app/app.module';
+import { SoloRegistrationModel } from 'src/app/models/soloRegistration.model';
+import { TeamRegistrationModel } from 'src/app/models/teamRegistration.model';
+import { RegistrationService } from 'src/app/service/registration.service';
 @Component({
   selector: 'app-club-info',
   templateUrl: './club-info.component.html',
@@ -33,6 +38,12 @@ export class ClubInfoComponent {
   isVisibleField: boolean = false;
   isVisibleGame: boolean = false;
   today = new Date();
+  soloRegistrations: SoloRegistrationModel[] = [];
+  teamRegistrations: TeamRegistrationModel[] = [];
+
+  TeamRights: TeamRoles = TeamRoles.Member;
+  PersonalTeam!: TeamClubModel;
+  maxPeopleCount: number = 1;
 
   fieldForm!: UntypedFormGroup;
   gameForm!: UntypedFormGroup;
@@ -58,7 +69,9 @@ export class ClubInfoComponent {
     private message: NzMessageService,
     private activateRoute: ActivatedRoute,
     private fieldService: FieldService,
+    private teamService: TeamService,
     private gameService: GameService,
+    private registrationService: RegistrationService,
     private ufb: UntypedFormBuilder
   ) {}
 
@@ -94,7 +107,62 @@ export class ClubInfoComponent {
       next: (response) => {
         if (response != null) {
           this.club = response;
-          this.show = true;
+
+          this.teamService.getPersonalTeam().subscribe({
+            next: (res) => {
+              this.PersonalTeam = res;
+              if (res != null) {
+                this.registrationService.getAllTeamRegistrations().subscribe({
+                  next: (register) => {
+                    this.teamRegistrations = register;
+                  },
+                });
+                this.teamService.getRights(res.id).subscribe({
+                  next: (rights) => {
+                    this.TeamRights = rights;
+                  },
+                });
+                this.teamService.getPeopleCount(res.id).subscribe({
+                  next: (count) => {
+                    this.maxPeopleCount = count;
+                  },
+                });
+              }
+              this.registrationService.getAllSoloRegistrations().subscribe({
+                next: (res) => {
+                  this.soloRegistrations = res;
+                  this.show = true;
+                },
+                error: (err) => {
+                  this.message.error('Сервер недоступен');
+                  console.log(err);
+                },
+              });
+            },
+            error: (err) => {
+              this.message.error('Сервер недоступен');
+              console.log(err);
+            },
+          });
+
+          this.fieldService.getAllFields(this.clubId).subscribe({
+            next: (res) => {
+              this.fields = res;
+            },
+            error: (err) => {
+              this.message.error('Сервер недоступен');
+              console.log(err);
+            },
+          });
+          this.gameService.getAllGames(this.clubId).subscribe({
+            next: (res) => {
+              this.games = res;
+            },
+            error: (err) => {
+              this.message.error('Сервер недоступен');
+              console.log(err);
+            },
+          });
         }
       },
       error: (err) => {
@@ -102,16 +170,24 @@ export class ClubInfoComponent {
         console.log(err);
       },
     });
-    this.fieldService.getAllFields(this.clubId).subscribe({
-      next: (res) => {
-        this.fields = res;
-      },
-    });
-    this.gameService.getAllGames(this.clubId).subscribe({
-      next: (res) => {
-        this.games = res;
-      },
-    });
+  }
+
+  GetSoloRegistration(gameId: string) {
+    if (this.soloRegistrations != null)
+      for (let index = 0; index < this.soloRegistrations.length; index++) {
+        if (this.soloRegistrations[index].gameId == gameId)
+          return this.soloRegistrations[index];
+      }
+    return null;
+  }
+
+  GetTeamRegistration(gameId: string) {
+    if (this.teamRegistrations != null)
+      for (let index = 0; index < this.teamRegistrations.length; index++) {
+        if (this.teamRegistrations[index].gameId == gameId)
+          return this.teamRegistrations[index];
+      }
+    return null;
   }
 
   range(start: number, end: number): number[] {
