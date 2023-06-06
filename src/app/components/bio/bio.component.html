@@ -15,7 +15,7 @@
 </ng-template>
 
 <ng-template #avatarTemplate>
-  <nz-avatar [nzSize]="128" nzIcon="user"></nz-avatar>
+  <nz-avatar [nzSize]="128" [nzGap]="1" [nzText]="AccountFirst()"></nz-avatar>
 </ng-template>
 
 <ng-template #description>
@@ -141,6 +141,19 @@
 ></ng-template>
 
 <ng-template #secondElseBlock
+  ><nz-card
+    *ngIf="!isItAccount() && isTeam && TeamRole != null; else thirdElseBlock"
+    [nzBordered]="false"
+    [nzActions]="[actionTeamLeave]"
+  >
+    <nz-card-meta
+      nzTitle="{{ teamClub.name }}"
+      nzDescription="{{ teamClub.description }}"
+      [nzAvatar]="teamTemplate"
+    ></nz-card-meta> </nz-card
+></ng-template>
+
+<ng-template #thirdElseBlock
   ><nz-card *ngIf="!isItAccount()" [nzBordered]="false">
     <nz-card-meta
       nzTitle="{{ teamClub.name }}"
@@ -150,7 +163,12 @@
 ></ng-template>
 
 <ng-template #teamTemplate>
-  <nz-avatar [nzSize]="128" nzIcon="team"></nz-avatar>
+  <nz-avatar *ngIf="isTeam" [nzSize]="128" nzIcon="team"></nz-avatar>
+  <nz-avatar
+    *ngIf="!isTeam"
+    [nzSize]="128"
+    nzIcon="ng-zorro:ngClub"
+  ></nz-avatar>
 </ng-template>
 
 <ng-template #actionTeamClubEdit>
@@ -167,6 +185,20 @@
     [nzIcon]="customIcon"
     nzCancelText="Нет, не удалять"
     nzOkText="Да, удалить"
+  ></span>
+</ng-template>
+
+<ng-template #actionTeamLeave>
+  <span
+    nz-icon
+    [nzIconfont]="'icon-tuichu'"
+    nz-popconfirm
+    nzPopconfirmTitle="Вы точно хотите покинуть команду?"
+    nzPopconfirmPlacement="bottom"
+    (nzOnConfirm)="TeamLeave()"
+    [nzIcon]="customIcon"
+    nzCancelText="Нет, не покидать"
+    nzOkText="Да, покинуть"
   ></span>
 </ng-template>
 

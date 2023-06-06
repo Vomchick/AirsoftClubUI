@@ -18,14 +18,10 @@
     [nzFooter]="modalFooter"
   >
     <ng-container *nzModalContent>
-      <form nz-form [formGroup]="clubForm">
+      <form nz-form [formGroup]="clubForm" nzLayout="vertical">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-            >Название</nz-form-label
-          >
+          <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
           <nz-form-control
-            [nzSm]="18"
-            [nzXs]="24"
             nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
           >
             <input nz-input formControlName="name" id="name" />
@@ -33,10 +29,8 @@
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description"
-            >Описание/Дивиз</nz-form-label
-          >
-          <nz-form-control [nzSm]="18" [nzXs]="24">
+          <nz-form-label nzFor="description">Описание/Дивиз</nz-form-label>
+          <nz-form-control>
             <nz-textarea-count [nzMaxCharacterCount]="2000">
               <textarea
                 formControlName="description"
@@ -64,7 +58,7 @@
   </ng-template>
 
   <nz-divider
-    nzText="Мои клуб"
+    nzText="Мой клуб"
     style="color: #dabc44"
     *ngIf="gotPersonalClub()"
   ></nz-divider>
@@ -210,6 +204,6 @@
   </div>
 
   <ng-template #clubTemplate>
-    <nz-avatar [nzSize]="64" nzIcon="team"></nz-avatar>
+    <nz-avatar [nzSize]="64" nzIcon="ng-zorro:ngClub"></nz-avatar>
   </ng-template>
 </div>

@@ -96,7 +96,7 @@ export class GameComponent implements OnInit {
         pickUp: [null, Validators.required],
       });
     }
-    debugger;
+    //debugger;
     if (this.teamRegistration != null) {
       this.teamRegisterForm = this.ufb.group({
         peopleCount: [this.teamRegistration.peopleCount, Validators.required],

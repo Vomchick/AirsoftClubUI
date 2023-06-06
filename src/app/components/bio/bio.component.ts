@@ -5,6 +5,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NzIconService } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { delay } from 'rxjs';
 import { TeamRoles } from 'src/app/app.module';
@@ -41,8 +42,13 @@ export class BioComponent implements OnInit {
     private clubService: ClubService,
     private ufb: UntypedFormBuilder,
     private message: NzMessageService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private iconService: NzIconService
+  ) {
+    this.iconService.fetchFromIconfont({
+      scriptUrl: 'https://at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
+    });
+  }
 
   ngOnInit(): void {
     /*if (!!this.teamClub && this.isTeam) {
@@ -96,7 +102,7 @@ export class BioComponent implements OnInit {
   }*/
 
   NotMember() {
-    if (this.TeamRole != TeamRoles.Member) return true;
+    if (this.TeamRole != null && this.TeamRole != TeamRoles.Member) return true;
     else return false;
   }
 
@@ -189,6 +195,20 @@ export class BioComponent implements OnInit {
     }
   }
 
+  TeamLeave() {
+    if (this.isTeam) {
+      this.teamService.leaveTeam().subscribe({
+        next: () => {
+          this.router.navigate(['teams']);
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    }
+  }
+
   beforeUpload(file: File) {
     console.log(file);
     return false;
@@ -222,6 +242,10 @@ export class BioComponent implements OnInit {
 
   handleCancelTeamClub(): void {
     this.isVisibleTeamClub = false;
+  }
+
+  AccountFirst(): string {
+    return this.account.callSign.substring(0, 1);
   }
 
   translateRoles(): void {

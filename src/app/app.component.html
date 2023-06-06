@@ -17,7 +17,12 @@
           <span nz-icon nzType="user" style="font-size: 20px"></span>
           <span>Аккаунт</span>
         </li>
-        <li nz-menu-item style="font-size: 14" [nzSelected]="isNewsPage()">
+        <li
+          nz-menu-item
+          style="font-size: 14"
+          [nzSelected]="isNewsPage()"
+          routerLink="news"
+        >
           <span nz-icon style="font-size: 20px">
             <svg xml:space="preserve" viewBox="0 0 442 442">
               <path

@@ -65,4 +65,8 @@ export class TeamService {
   negativeTeamRequest(request: TeamRequestModel) {
     return this.http.post(this.apiUrl + 'Team/Request/neg', request);
   }
+
+  leaveTeam() {
+    return this.http.get(this.apiUrl + 'Team/leave');
+  }
 }

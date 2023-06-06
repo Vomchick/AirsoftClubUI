@@ -8,6 +8,25 @@
 
   <div
     nz-row
+    *ngIf="NotMember()"
+    nzJustify="center"
+    style="padding-bottom: 16px"
+  >
+    <div nz-col nzMd="18" nzSm="24">
+      <button
+        nz-button
+        nzType="dashed"
+        class="functionButton"
+        (click)="showInfoModal()"
+      >
+        <span nz-icon nzType="plus"></span>
+        Добавить запись
+      </button>
+    </div>
+  </div>
+
+  <div
+    nz-row
     nzJustify="center"
     *ngIf="requests != null && NotMember()"
     style="padding-bottom: 16px"
@@ -91,9 +110,55 @@
     </div>
   </div>
 
-  <div nz-row nzJustify="center">
-    <div nz-col nzMd="18" nzSm="24">
-      <info></info>
+  <div nz-row *ngIf="infos" nzJustify="center">
+    <div
+      nz-col
+      nzMd="18"
+      nzSm="24"
+      *ngFor="let info of infos"
+      style="padding-bottom: 16px"
+    >
+      <info [info]="info" [CanChange]="NotMember()"></info>
     </div>
   </div>
 </div>
+
+<nz-modal
+  [(nzVisible)]="isVisibleInfo"
+  nzTitle="Добавление записи"
+  nzCentered
+  (nzOnCancel)="handleInfoCancel()"
+  [nzFooter]="modalInfoFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="infoForm" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzFor="text" nzRequired>Текст</nz-form-label>
+        <nz-form-control
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 3000 символов"
+        >
+          <nz-textarea-count [nzMaxCharacterCount]="3000">
+            <textarea
+              formControlName="text"
+              id="text"
+              nz-input
+              rows="5"
+              style="max-height: 500px"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalInfoFooter>
+  <button
+    nz-button
+    [disabled]="infoForm.invalid"
+    nzType="primary"
+    (click)="CreateInfoPost()"
+  >
+    Добавить
+  </button>
+</ng-template>

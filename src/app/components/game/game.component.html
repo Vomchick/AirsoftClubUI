@@ -12,7 +12,7 @@
     Цена с прокатным снаряжением - {{ game.rentalPrice }}
   </p>
   <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
-  <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+  <p>Начало - {{ startDt | date : "d MMM y, H:mm" }}</p>
 </nz-card>
 
 <ng-template #CannotChangeWithTeam>
@@ -30,7 +30,7 @@
       Цена с прокатным снаряжением - {{ game.rentalPrice }}
     </p>
     <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
-    <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+    <p>Начало - {{ startDt | date : "d MMM y, H:mm" }}</p>
     <div *ngIf="teamRegistration != null; else noTeam">
       <nz-alert
         nzType="success"
@@ -62,7 +62,7 @@
       Цена с прокатным снаряжением - {{ game.rentalPrice }}
     </p>
     <p>Тип игры - {{ ConvertGameType(game.gameType) }}</p>
-    <p>Начало - {{ startDt | date : "d MMM y, h:mm" }}</p>
+    <p>Начало - {{ startDt | date : "d MMM y, H:mm" }}</p>
     <div *ngIf="teamRegistration != null; else noTeam">
       <nz-alert
         nzType="success"

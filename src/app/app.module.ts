@@ -49,6 +49,12 @@ export const enum PickUp {
   GetByCarHaveSpace,
 }
 
+export const enum AuthorType {
+  Player,
+  Team,
+  Club,
+}
+
 registerLocaleData(ru);
 
 @NgModule({

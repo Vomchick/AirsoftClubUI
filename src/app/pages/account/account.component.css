@@ -1,4 +1,4 @@
-form {
+.form {
   margin-top: 20px;
 }
 .createForm {
@@ -17,4 +17,7 @@ form {
 
   width: 300em;
   transform: translate(-50%, -50%);
+}
+.functionButton {
+  width: 100%;
 }

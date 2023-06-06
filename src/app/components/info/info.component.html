@@ -1,23 +1,98 @@
-<nz-card [nzBordered]="false" [nzCover]="coverTemplate">
-  <nz-card-meta nzTitle="Информационная запись"></nz-card-meta>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consectetur
-    pellentesque sapien, ac fringilla velit fringilla sit amet. Curabitur augue
-    libero, fringilla quis massa eu, suscipit sagittis lectus. Aenean tincidunt
-    hendrerit sem ac pulvinar. Aenean ut luctus dui, in vehicula massa. Quisque
-    iaculis condimentum purus, ac placerat urna feugiat et. Phasellus efficitur
-    non dui sed feugiat. Praesent tortor elit, cursus at neque commodo, tempus
-    ullamcorper est. Sed non purus faucibus, sagittis mi nec, feugiat diam. Sed
-    pharetra justo non est auctor, in imperdiet ipsum placerat. Etiam turpis
-    libero, feugiat in nulla viverra, rutrum volutpat lectus. Nullam sed elit
-    ullamcorper, tempus arcu vel, lacinia ante. Morbi interdum ullamcorper
-    tincidunt. Nullam elit risus, sollicitudin vitae neque sit amet, iaculis
-    mattis enim.
-  </p>
+<nz-card
+  *ngIf="CanChange; else CantChange"
+  [nzBordered]="false"
+  [nzTitle]="infoTitle"
+  [nzExtra]="extraTemplate"
+  [nzActions]="[actionInfoEdit, actionInfoDelete]"
+>
+  <p>{{ info.text }}</p>
 </nz-card>
-<ng-template #coverTemplate>
-  <img
-    src="https://stoneforest.ru/wp-content/uploads/2016/02/muzhskie-igry-strajkbol.jpg"
-    alt="example"
-  />
+
+<ng-template #CantChange>
+  <nz-card [nzBordered]="false" [nzTitle]="infoTitle" [nzExtra]="extraTemplate">
+    <p>{{ info.text }}</p>
+  </nz-card>
+</ng-template>
+
+<ng-template #extraTemplate>
+  <span>{{ info.creationDt | date : "d MMM y" }}</span>
+</ng-template>
+
+<ng-template #infoTitle>
+  <nz-avatar
+    *ngIf="info.authorType == 0"
+    nzSize="large"
+    [nzText]="CutPlayerName()"
+  ></nz-avatar>
+  <nz-avatar
+    *ngIf="info.authorType == 1"
+    nzSize="large"
+    nzIcon="team"
+  ></nz-avatar>
+  <nz-avatar
+    *ngIf="info.authorType == 2"
+    nzSize="large"
+    nzIcon="ng-zorro:ngClub"
+  ></nz-avatar>
+  <span style="margin-left: 16px">{{ info.authorName }}</span>
+</ng-template>
+
+<ng-template #actionInfoEdit>
+  <span nz-icon nzType="edit" (click)="showModal()"></span>
+</ng-template>
+
+<ng-template #actionInfoDelete>
+  <span
+    nz-icon
+    nzType="delete"
+    nz-popconfirm
+    nzPopconfirmTitle="Вы точно хотите удалить запись?"
+    nzPopconfirmPlacement="bottom"
+    (nzOnConfirm)="deleteInfo()"
+    [nzIcon]="customIcon"
+    nzCancelText="Нет, не удалять"
+    nzOkText="Да, удалить"
+  ></span>
+</ng-template>
+
+<ng-template #customIcon>
+  <span nz-icon nzType="warning" style="color: #b4251b"></span>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Изменение данных"
+  nzCentered
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="infoForm" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzFor="text">Контент</nz-form-label>
+        <nz-form-control>
+          <nz-textarea-count [nzMaxCharacterCount]="3000">
+            <textarea
+              formControlName="text"
+              id="text"
+              nz-input
+              rows="5"
+              style="max-height: 500px"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+  <button
+    nz-button
+    [disabled]="infoForm.invalid"
+    nzType="primary"
+    (click)="UpdateInfo()"
+  >
+    Обновить
+  </button>
 </ng-template>

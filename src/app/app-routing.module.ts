@@ -10,6 +10,7 @@ import { PersonalTeamComponent } from './pages/personal-team/personal-team.compo
 import { ClubsComponent } from './pages/clubs/clubs.component';
 import { ClubInfoComponent } from './pages/club-info/club-info.component';
 import { AccountGuard } from './guards/account.guard';
+import { NewsComponent } from './pages/news/news.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,13 @@ const routes: Routes = [
       import('./pages/clubs/clubs.module').then((x) => x.ClubsModule),
     canActivate: [AuthGuard, AccountGuard],
     //loadChildren: () =>import('./pages/personal-team/personal-team.module').then((x) => x.PersonalTeamModule),
+  },
+  {
+    path: 'news',
+    component: NewsComponent,
+    loadChildren: () =>
+      import('./pages/news/news.module').then((x) => x.NewsModule),
+    canActivate: [AuthGuard, AccountGuard],
   },
 ];
 

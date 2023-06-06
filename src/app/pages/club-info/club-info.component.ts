@@ -10,24 +10,25 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subscription, delay } from 'rxjs';
 import { FieldModel } from 'src/app/models/field.model';
 import { GameModel } from 'src/app/models/game.model';
-import { InfoModel } from 'src/app/models/info.model';
 import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { ClubService } from 'src/app/service/club.service';
 import { FieldService } from 'src/app/service/field.service';
 import { GameService } from 'src/app/service/game.service';
 import { differenceInCalendarDays } from 'date-fns';
 import { TeamService } from 'src/app/service/team.service';
-import { TeamRoles } from 'src/app/app.module';
+import { AuthorType, TeamRoles } from 'src/app/app.module';
 import { SoloRegistrationModel } from 'src/app/models/soloRegistration.model';
 import { TeamRegistrationModel } from 'src/app/models/teamRegistration.model';
 import { RegistrationService } from 'src/app/service/registration.service';
+import { InfoPostModel } from 'src/app/models/infoPost.model';
+import { InfoService } from 'src/app/service/info.service';
 @Component({
   selector: 'app-club-info',
   templateUrl: './club-info.component.html',
   styleUrls: ['./club-info.component.css'],
 })
 export class ClubInfoComponent {
-  infos: InfoModel[] = [];
+  infos: InfoPostModel[] = [];
   fields: FieldModel[] = [];
   games: GameModel[] = [];
   clubId!: string;
@@ -35,11 +36,13 @@ export class ClubInfoComponent {
   show: boolean = false;
   subscription!: Subscription;
   CanChange: boolean = false;
-  isVisibleField: boolean = false;
-  isVisibleGame: boolean = false;
   today = new Date();
   soloRegistrations: SoloRegistrationModel[] = [];
   teamRegistrations: TeamRegistrationModel[] = [];
+
+  isVisibleField: boolean = false;
+  isVisibleGame: boolean = false;
+  isVisibleInfo: boolean = false;
 
   TeamRights: TeamRoles = TeamRoles.Member;
   PersonalTeam!: TeamClubModel;
@@ -47,6 +50,7 @@ export class ClubInfoComponent {
 
   fieldForm!: UntypedFormGroup;
   gameForm!: UntypedFormGroup;
+  infoForm!: UntypedFormGroup;
 
   disabledDate = (current: Date): boolean =>
     differenceInCalendarDays(current, this.today) < 0;
@@ -72,10 +76,15 @@ export class ClubInfoComponent {
     private teamService: TeamService,
     private gameService: GameService,
     private registrationService: RegistrationService,
+    private infoService: InfoService,
     private ufb: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.subscription = this.activateRoute.params.subscribe(
+      (params) => (this.clubId = params['id'])
+    );
+
     this.fieldForm = this.ufb.group({
       name: [null, [Validators.required, Validators.maxLength(128)]],
       text: [null, [Validators.required, Validators.maxLength(2000)]],
@@ -95,9 +104,11 @@ export class ClubInfoComponent {
       //image: [this.account.imageFile, []],
     });
 
-    this.subscription = this.activateRoute.params.subscribe(
-      (params) => (this.clubId = params['id'])
-    );
+    this.infoForm = this.ufb.group({
+      text: [null, [Validators.required, Validators.maxLength(2000)]],
+      authorType: [AuthorType.Club],
+      authorId: [this.clubId],
+    });
     this.clubService.getRights(this.clubId).subscribe({
       next: (res) => {
         this.CanChange = res;
@@ -108,6 +119,16 @@ export class ClubInfoComponent {
         if (response != null) {
           this.club = response;
 
+          this.infoService
+            .getAllInfos({
+              authorId: this.clubId,
+              authorType: AuthorType.Club,
+            })
+            .subscribe({
+              next: (infoPosts) => {
+                this.infos = infoPosts;
+              },
+            });
           this.teamService.getPersonalTeam().subscribe({
             next: (res) => {
               this.PersonalTeam = res;
@@ -172,6 +193,28 @@ export class ClubInfoComponent {
     });
   }
 
+  CreateInfoPost() {
+    if (this.infoForm.valid) {
+      this.infoService.addInfo(this.infoForm.value).subscribe({
+        next: (res) => {
+          this.isVisibleInfo = false;
+          window.location.reload();
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.infoForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
   GetSoloRegistration(gameId: string) {
     if (this.soloRegistrations != null)
       for (let index = 0; index < this.soloRegistrations.length; index++) {
@@ -212,6 +255,14 @@ export class ClubInfoComponent {
 
   handleGameCancel(): void {
     this.isVisibleGame = false;
+  }
+
+  showInfoModal(): void {
+    this.isVisibleInfo = true;
+  }
+
+  handleInfoCancel(): void {
+    this.isVisibleInfo = false;
   }
 
   CreateField() {

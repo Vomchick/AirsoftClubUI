@@ -33,15 +33,20 @@
       </button>
     </div>
     <div nz-col nzMd="6" nzSm="12" nzXs="24">
-      <button nz-button nzType="dashed" class="functionButton">
+      <button
+        nz-button
+        nzType="dashed"
+        class="functionButton"
+        (click)="showInfoModal()"
+      >
         <span nz-icon nzType="plus"></span>
         Добавить запись
       </button>
     </div>
   </div>
-  <div nz-row nzJustify="center" class="part">
-    <div nz-col nzMd="18" nzSm="24">
-      <info></info>
+  <div nz-row *ngIf="infos" nzJustify="center" class="part">
+    <div nz-col nzMd="18" nzSm="24" *ngFor="let info of infos">
+      <info [info]="info" [CanChange]="CanChange"></info>
     </div>
   </div>
   <div nz-row nzJustify="center">
@@ -65,6 +70,46 @@
 </div>
 
 <nz-modal
+  [(nzVisible)]="isVisibleInfo"
+  nzTitle="Добавление записи"
+  nzCentered
+  (nzOnCancel)="handleInfoCancel()"
+  [nzFooter]="modalInfoFooter"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="infoForm" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzFor="text" nzRequired>Текст</nz-form-label>
+        <nz-form-control
+          nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 3000 символов"
+        >
+          <nz-textarea-count [nzMaxCharacterCount]="3000">
+            <textarea
+              formControlName="text"
+              id="text"
+              nz-input
+              rows="5"
+              style="max-height: 500px"
+            ></textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalInfoFooter>
+  <button
+    nz-button
+    [disabled]="infoForm.invalid"
+    nzType="primary"
+    (click)="CreateInfoPost()"
+  >
+    Добавить
+  </button>
+</ng-template>
+
+<nz-modal
   [(nzVisible)]="isVisibleField"
   nzTitle="Добавление полигона"
   nzCentered
@@ -72,14 +117,10 @@
   [nzFooter]="modalFieldFooter"
 >
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="fieldForm">
+    <form nz-form [formGroup]="fieldForm" nzLayout="vertical">
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-          >Название</nz-form-label
-        >
+        <nz-form-label nzRequired nzFor="name">Название</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 128 символов"
         >
           <input nz-input formControlName="name" id="name" />
@@ -87,12 +128,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired="" nzFor="text"
-          >Описание</nz-form-label
-        >
+        <nz-form-label nzRequired="" nzFor="text">Описание</nz-form-label>
         <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 2000 символов"
         >
           <nz-textarea-count [nzMaxCharacterCount]="2000">
@@ -108,11 +145,7 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-control
-          [nzSm]="{ span: 18, offset: 6 }"
-          [nzXs]="24"
-          nzErrorTip="Это поле обязательно для заполнения"
-        >
+        <nz-form-control nzErrorTip="Это поле обязательно для заполнения">
           <nz-radio-group formControlName="isCovered">
             <label nz-radio [nzValue]="false">Открытый</label>
             <label nz-radio [nzValue]="true">Крытый</label>
@@ -121,21 +154,15 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="address"
-          >Адрес</nz-form-label
-        >
-        <nz-form-control
-          [nzSm]="18"
-          [nzXs]="24"
-          nzErrorTip="Это поле обязательно для заполнения"
-        >
+        <nz-form-label nzRequired nzFor="address">Адрес</nz-form-label>
+        <nz-form-control nzErrorTip="Это поле обязательно для заполнения">
           <input nz-input formControlName="address" id="adress" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="gps">GPS</nz-form-label>
-        <nz-form-control [nzSm]="18" [nzXs]="24">
+        <nz-form-label nzFor="gps">GPS</nz-form-label>
+        <nz-form-control>
           <input nz-input formControlName="gps" id="gps" />
         </nz-form-control>
       </nz-form-item>

@@ -1,0 +1,24 @@
+<div *ngIf="show">
+  <nz-back-top></nz-back-top>
+  <nz-divider
+    nzText="Все новости"
+    style="color: #dabc44"
+    *ngIf="infos"
+  ></nz-divider>
+  <div nz-row *ngIf="infos; else NoInfos" nzJustify="center">
+    <div
+      nz-col
+      nzMd="18"
+      nzSm="24"
+      *ngFor="let info of infos"
+      style="padding-bottom: 16px"
+    >
+      <info [info]="info" [CanChange]="false"></info>
+    </div>
+  </div>
+  <ng-template #NoInfos>
+    <nz-empty nzNotFoundImage="simple" [nzNotFoundContent]="contentTpl">
+      <ng-template #contentTpl>Новости отсутствуют</ng-template>
+    </nz-empty>
+  </ng-template>
+</div>

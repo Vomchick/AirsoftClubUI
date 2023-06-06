@@ -5,9 +5,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthorType } from 'src/app/app.module';
 import { AccountModel } from 'src/app/models/account.model';
-import { InfoModel } from 'src/app/models/info.model';
+import { InfoPostModel } from 'src/app/models/infoPost.model';
 import { AccountService } from 'src/app/service/account.service';
+import { InfoService } from 'src/app/service/info.service';
 
 @Component({
   selector: 'app-account',
@@ -15,15 +17,19 @@ import { AccountService } from 'src/app/service/account.service';
   styleUrls: ['./account.component.css'],
 })
 export class AccountComponent implements OnInit {
-  infos: InfoModel[] = [];
+  infos: InfoPostModel[] = [];
   account!: AccountModel;
   accountForm!: UntypedFormGroup;
+  infoForm!: UntypedFormGroup;
   show: boolean = false;
+
+  isVisible: boolean = false;
 
   constructor(
     private accService: AccountService,
     private ufb: UntypedFormBuilder,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private infoService: InfoService
   ) {}
 
   ngOnInit(): void {
@@ -31,8 +37,18 @@ export class AccountComponent implements OnInit {
       next: (response) => {
         if (response != null) {
           this.account = response;
-          this.show = true;
+          this.infoService
+            .getAllInfos({
+              authorId: '00000000-0000-0000-0000-000000000000',
+              authorType: AuthorType.Player,
+            })
+            .subscribe({
+              next: (infoPosts) => {
+                this.infos = infoPosts;
+              },
+            });
         }
+        this.show = true;
       },
       error: (err) => {
         this.message.error('Сервер недоступен');
@@ -45,10 +61,38 @@ export class AccountComponent implements OnInit {
       gameRole: [null, [Validators.required]],
       desc: [null, [Validators.maxLength(2000)]],
     });
+
+    this.infoForm = this.ufb.group({
+      text: [null, [Validators.required, Validators.maxLength(2000)]],
+      authorType: [AuthorType.Player],
+      authorId: ['00000000-0000-0000-0000-000000000000'],
+    });
   }
 
   haveAccount(): boolean {
     return !!this.account;
+  }
+
+  CreateInfoPost() {
+    if (this.infoForm.valid) {
+      this.infoService.addInfo(this.infoForm.value).subscribe({
+        next: (res) => {
+          this.isVisible = false;
+          window.location.reload();
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.infoForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   CreateAccount() {
@@ -76,5 +120,13 @@ export class AccountComponent implements OnInit {
     this.message.error(
       'Что-то пошло не так. Проверьте введенные данные или попробуйте позже'
     );
+  }
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
   }
 }

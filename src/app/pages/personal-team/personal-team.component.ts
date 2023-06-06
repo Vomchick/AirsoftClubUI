@@ -1,11 +1,17 @@
 import { Component, Input } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subscription, delay } from 'rxjs';
-import { TeamRoles } from 'src/app/app.module';
-import { InfoModel } from 'src/app/models/info.model';
+import { AuthorType, TeamRoles } from 'src/app/app.module';
+import { InfoPostModel } from 'src/app/models/infoPost.model';
 import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { TeamRequestModel } from 'src/app/models/teamRequest.model';
+import { InfoService } from 'src/app/service/info.service';
 import { TeamService } from 'src/app/service/team.service';
 
 @Component({
@@ -14,7 +20,7 @@ import { TeamService } from 'src/app/service/team.service';
   styleUrls: ['./personal-team.component.css'],
 })
 export class PersonalTeamComponent {
-  infos: InfoModel[] = [];
+  infos: InfoPostModel[] = [];
   requests: TeamRequestModel[] = [];
   teamId!: string;
   team!: TeamClubModel;
@@ -22,6 +28,9 @@ export class PersonalTeamComponent {
   subscription!: Subscription;
   TeamRole: TeamRoles = TeamRoles.Member;
   requestVisible: boolean = false;
+  isVisibleInfo: boolean = false;
+
+  infoForm!: UntypedFormGroup;
 
   optionList = [
     { label: 'Участник', value: TeamRoles.Member },
@@ -32,7 +41,9 @@ export class PersonalTeamComponent {
   constructor(
     private teamService: TeamService,
     private message: NzMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private infoService: InfoService,
+    private ufb: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -52,10 +63,26 @@ export class PersonalTeamComponent {
       },
     });
 
+    this.infoForm = this.ufb.group({
+      text: [null, [Validators.required, Validators.maxLength(2000)]],
+      authorType: [AuthorType.Team],
+      authorId: [this.teamId],
+    });
+
     this.teamService.getTeam(this.teamId).subscribe({
       next: (response) => {
         if (response != null) {
           this.team = response;
+          this.infoService
+            .getAllInfos({
+              authorId: this.teamId,
+              authorType: AuthorType.Team,
+            })
+            .subscribe({
+              next: (infoPosts) => {
+                this.infos = infoPosts;
+              },
+            });
           this.show = true;
         }
       },
@@ -66,14 +93,44 @@ export class PersonalTeamComponent {
     });
   }
 
+  CreateInfoPost() {
+    if (this.infoForm.valid) {
+      this.infoService.addInfo(this.infoForm.value).subscribe({
+        next: (res) => {
+          this.isVisibleInfo = false;
+          window.location.reload();
+        },
+        error: (err) => {
+          this.createMessage();
+          console.log(err);
+        },
+      });
+    } else {
+      Object.values(this.infoForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
   NotMember() {
-    if (this.TeamRole != TeamRoles.Member) return true;
+    if (this.TeamRole != null && this.TeamRole != TeamRoles.Member) return true;
     else return false;
   }
 
   IsCommander() {
     if (this.TeamRole == TeamRoles.Commander) return true;
     else return false;
+  }
+
+  showInfoModal(): void {
+    this.isVisibleInfo = true;
+  }
+
+  handleInfoCancel(): void {
+    this.isVisibleInfo = false;
   }
 
   PositiveRequest(request: TeamRequestModel) {
@@ -93,5 +150,11 @@ export class PersonalTeamComponent {
         window.location.reload();
       },
     });
+  }
+
+  createMessage(): void {
+    this.message.error(
+      'Что-то пошло не так. Проверьте введенные данные или попробуйте позже'
+    );
   }
 }
