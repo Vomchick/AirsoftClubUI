@@ -10,4 +10,5 @@ export interface GameModel {
   startDt: Date;
   gameType: GameType;
   fieldId: string;
+  fieldName: string;
 }

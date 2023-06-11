@@ -15,6 +15,7 @@ import { TeamClubModel } from 'src/app/models/teamClub.model';
 import { TeamRegistrationModel } from 'src/app/models/teamRegistration.model';
 import { SoloRegistrationModel } from 'src/app/models/soloRegistration.model';
 import { RegistrationService } from 'src/app/service/registration.service';
+import { StatisticModel } from 'src/app/models/statistic.model';
 
 @Component({
   selector: 'game',
@@ -31,8 +32,10 @@ export class GameComponent implements OnInit {
   @Input() maxPeopleCount!: number;
   today = new Date();
   startDt!: Date;
+  gameStat!: StatisticModel;
 
   isVisible = false;
+  isVisibleStat = false;
   soloRegisterVisible = false;
   teamRegisterVisible = false;
 
@@ -109,6 +112,15 @@ export class GameComponent implements OnInit {
 
     this.startDt = new Date(this.game.startDt);
     this.i18n.setLocale(ru_RU);
+  }
+
+  GetStat() {
+    this.gameService.getGameStatistic(this.game.id).subscribe({
+      next: (res) => {
+        this.gameStat = res;
+        this.isVisibleStat = true;
+      },
+    });
   }
 
   SoloRegistration() {
@@ -271,5 +283,9 @@ export class GameComponent implements OnInit {
 
   handleCancel(): void {
     this.isVisible = false;
+  }
+
+  handleStatCancel(): void {
+    this.isVisibleStat = false;
   }
 }

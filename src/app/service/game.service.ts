@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { auth_api_url } from '../app-injection-tokens';
 import { GameModel } from '../models/game.model';
 import { Observable } from 'rxjs';
+import { StatisticModel } from '../models/statistic.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,10 @@ export class GameService {
     private http: HttpClient,
     @Inject(auth_api_url) private apiUrl: string
   ) {}
+
+  getGameStatistic(id: string): Observable<StatisticModel> {
+    return this.http.get<StatisticModel>(this.apiUrl + 'Game/statistic/' + id);
+  }
 
   getGame(id: string): Observable<GameModel> {
     return this.http.get<GameModel>(this.apiUrl + 'Game/' + id);

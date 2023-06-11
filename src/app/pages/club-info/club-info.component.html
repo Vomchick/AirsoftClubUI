@@ -200,6 +200,24 @@
       </nz-form-item>
 
       <nz-form-item>
+        <nz-form-label nzRequired nzFor="fieldId">Полигон</nz-form-label>
+        <nz-form-control nzErrorTip="Выберите полигон">
+          <nz-select
+            formControlName="fieldId"
+            id="fieldId"
+            style="color: white"
+            nzPlaceHolder="Добавьте полигон перед созданием игры"
+          >
+            <nz-option
+              *ngFor="let field of fields"
+              [nzValue]="field.id"
+              [nzLabel]="field.name"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
         <nz-form-label nzRequired="" nzFor="text">Описание</nz-form-label>
         <nz-form-control
           nzErrorTip="Это поле обязательно для заполнения, длина не должна превышать 2000 символов"

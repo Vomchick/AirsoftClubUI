@@ -1,12 +1,12 @@
 <nz-card
   [nzBordered]="false"
-  [nzActions]="[actionGameEdit, actionGameDelete]"
+  [nzActions]="[actionGameEdit, actionGameDelete, actionGameStat]"
   nzTitle="Игра {{ game.name }}"
   [nzExtra]="extraTemplate"
   *ngIf="CanChange; else CannotChangeWithTeam"
 >
   <p>{{ game.text }}</p>
-  <p>Полигон -</p>
+  <p>Полигон - {{ game.fieldName }}</p>
   <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
   <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
     Цена с прокатным снаряжением - {{ game.rentalPrice }}
@@ -24,7 +24,7 @@
     [nzActions]="[soloRegister, teamRegister]"
   >
     <p>{{ game.text }}</p>
-    <p>Полигон -</p>
+    <p>Полигон - {{ game.fieldName }}</p>
     <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
     <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
       Цена с прокатным снаряжением - {{ game.rentalPrice }}
@@ -56,7 +56,7 @@
     [nzActions]="[soloRegister]"
   >
     <p>{{ game.text }}</p>
-    <p>Полигон -</p>
+    <p>Полигон - {{ game.fieldName }}</p>
     <p>Цена со своим снаряжением - {{ game.defaultPrice }}</p>
     <p *ngIf="game.rentalPrice != null && game.rentalPrice > 0">
       Цена с прокатным снаряжением - {{ game.rentalPrice }}
@@ -75,6 +75,27 @@
 <ng-template #actionGameEdit>
   <span nz-icon nzType="edit" (click)="showModal()"></span>
 </ng-template>
+
+<ng-template #actionGameStat>
+  <span nz-icon nzType="audit" (click)="GetStat()"></span>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisibleStat"
+  nzTitle="Статистика по игре"
+  (nzOnCancel)="handleStatCancel()"
+  (nzOnOk)="handleStatCancel()"
+  nzCentered
+>
+  <ng-container *nzModalContent>
+    <p>Кол-во одиночных игроков: {{ gameStat.soloPeopleCount }}</p>
+    <p>Кол-во команд: {{ gameStat.teamsCount }}</p>
+    <p>Кол-во людей в командах: {{ gameStat.teamsPeopleCount }}</p>
+    <p>Общее количество людей: {{ gameStat.totalPeopleCount }}</p>
+    <p>Кол-во прокатчиков: {{ gameStat.rentCount }}</p>
+    <p>Скольких надо подвезти: {{ gameStat.pickUpCount }}</p>
+  </ng-container>
+</nz-modal>
 
 <ng-template #soloRegister>
   <span

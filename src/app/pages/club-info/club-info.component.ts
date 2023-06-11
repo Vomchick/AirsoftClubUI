@@ -96,6 +96,7 @@ export class ClubInfoComponent {
 
     this.gameForm = this.ufb.group({
       name: [null, [Validators.required, Validators.maxLength(128)]],
+      fieldId: [null, Validators.required],
       text: [null, [Validators.required, Validators.maxLength(2000)]],
       defaultPrice: [null, [Validators.required]],
       rentalPrice: [null],
